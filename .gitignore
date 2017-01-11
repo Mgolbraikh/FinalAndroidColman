@@ -1,2 +1,12 @@
 FinalProject_Step2_204638845_305464166.zip
 Winez/build
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+vcs.xml
+*.iml
