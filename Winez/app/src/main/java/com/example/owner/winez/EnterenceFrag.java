@@ -23,7 +23,7 @@ public class EnterenceFrag extends Fragment {
     }
 
     public EnterenceFrag() {
-        // Required empty public constructor
+        // Required empty public constructo
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class EnterenceFrag extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.uppermenu,menu);
-        getActivity().setTitle("Student List");
+        getActivity().setTitle("Winez");
         menu.findItem(R.id.AddStudentButton).setVisible(true);
         menu.findItem(R.id.EditStudentButton).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
