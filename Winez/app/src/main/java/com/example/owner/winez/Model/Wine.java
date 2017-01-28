@@ -4,12 +4,15 @@ package com.example.owner.winez.Model;
  * Created by owner on 28-Jan-17.
  */
 
-public class Wine {
+public class Wine extends Entity {
 
     public Wine(String name) {
         this.name = name;
     }
-
+    public Wine(String name, String uid) {
+        super(uid);
+        this.name = name;
+    }
     public String getName() {
         return name;
     }

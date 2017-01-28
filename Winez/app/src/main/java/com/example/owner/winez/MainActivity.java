@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
 
         FragmentTransaction ftr = getFragmentManager().beginTransaction();
         ftr.replace(R.id.WinezActivityMainView, WinezMainFrag);
+        ftr.addToBackStack("Registration");
         ftr.show(WinezMainFrag);
         ftr.commit();
 
