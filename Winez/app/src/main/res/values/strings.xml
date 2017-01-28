@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Winez</string>
+
+    <string name="Entence">Winez</string>
+    <string name="Entence_Hello">Winez</string>
+    <string name="Entence_Name">Name:</string>
+    <string name="Entence_Email">Email:</string>
+    <string name="Entrence_Password">Email:</string>
+    <string name="Entence_Enter">Lets Go!</string>
+
 </resources>
