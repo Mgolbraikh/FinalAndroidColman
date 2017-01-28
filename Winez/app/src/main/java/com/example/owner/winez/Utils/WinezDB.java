@@ -1,4 +1,4 @@
-package Utils;
+package com.example.owner.winez.Utils;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

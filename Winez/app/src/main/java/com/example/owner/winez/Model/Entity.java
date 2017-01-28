@@ -1,8 +1,8 @@
-package Model;
+package com.example.owner.winez.Model;
 
 import com.google.android.gms.tasks.Task;
 
-import Utils.WinezDB;
+import com.example.owner.winez.Utils.WinezDB;
 
 /**
  * Created by Ziv on 28/01/2017.
