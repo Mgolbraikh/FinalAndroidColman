@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,7 +15,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import org.w3c.dom.Text;
@@ -43,7 +48,18 @@ public class RegisterFrag extends Fragment {
         enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              //  mAuth.createUserWithEmailAndPassword(email.getText().toString(), username.getText().toString()).add
+                mAuth.createUserWithEmailAndPassword(email.getText().toString(),
+                                                     username.getText().toString())
+                        .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (!task.isSuccessful()) {
+                                    Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Toast.makeText(getActivity(), "Successful registration!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
 
             }
         });
