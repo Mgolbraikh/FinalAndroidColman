@@ -1,4 +1,4 @@
-package Model;
+package com.example.owner.winez.Model;
 
 /**
  * Created by owner on 28-Jan-17.
