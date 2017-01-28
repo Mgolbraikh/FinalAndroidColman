@@ -24,6 +24,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.w3c.dom.Text;
 
+import Model.User;
+
 public class RegisterFrag extends Fragment {
 
     private FirebaseAuth mAuth;
@@ -56,7 +58,18 @@ public class RegisterFrag extends Fragment {
                                 if (!task.isSuccessful()) {
                                     Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
                                 }else{
-                                    Toast.makeText(getActivity(), "Successful registration!", Toast.LENGTH_SHORT).show();
+
+                                    User usrToAdd = new User(username.getText().toString(), email.getText().toString(), task.getResult().getUser().getUid());
+                                    usrToAdd.save().addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (!task.isSuccessful()) {
+                                                Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
+                                            } else{
+                                                Toast.makeText(getActivity(), "Successful registration!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                                 }
                             }
                         });
