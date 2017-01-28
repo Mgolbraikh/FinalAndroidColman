@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -30,5 +32,18 @@ public class EnterenceFrag extends Fragment {
                 return view;
     }
 
+
+    /*
+    * This updates only when the fragment starts
+    * */
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.uppermenu,menu);
+        getActivity().setTitle("Student List");
+        menu.findItem(R.id.AddStudentButton).setVisible(true);
+        menu.findItem(R.id.EditStudentButton).setVisible(false);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
 }
