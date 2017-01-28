@@ -34,35 +34,46 @@ public class RegisterFrag extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //Bundle StudentIdBundle = getArguments();
-        View view = inflater.inflate(R.layout.fragment_register, container, false);
-
+        final View view = inflater.inflate(R.layout.fragment_register, container, false);
         final EditText username = (EditText)view.findViewById(R.id.reg_username);
         final EditText email = (EditText)view.findViewById(R.id.reg_email);
-        EditText password = (EditText)view.findViewById(R.id.reg_password);
-        Button enter = (Button)view.findViewById(R.id.reg_enter);
+        final EditText password = (EditText)view.findViewById(R.id.reg_password);
+        final Button enter = (Button)view.findViewById(R.id.reg_enter);
 
         enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // Disabling button
+                enter.setEnabled(false);
                 mAuth.createUserWithEmailAndPassword(email.getText().toString(),
-                                                     username.getText().toString())
+                                                     password.getText().toString())
                         .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                // Checking if add was successful
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(),
+                                                   "Registration failed",
+                                                   Toast.LENGTH_SHORT).show();
+                                    enter.setEnabled(true);
                                 }else{
 
-                                    User usrToAdd = new User(username.getText().toString(), email.getText().toString(), task.getResult().getUser().getUid());
-                                    usrToAdd.save().addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                                    // Adding user to db
+                                    User usrToAdd =
+                                            new User(username.getText().toString(),
+                                                     email.getText().toString(),
+                                                    task.getResult().getUser().getUid());
+                                    usrToAdd.save().addOnCompleteListener(getActivity(),
+                                                            new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            if (!task.isSuccessful()) {
-                                                Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
-                                            } else{
-                                                Toast.makeText(getActivity(), "Successful registration!", Toast.LENGTH_SHORT).show();
-                                            }
+                                            Toast.makeText(getActivity(),
+                                                    "Successful registration!",
+                                                     Toast.LENGTH_SHORT).show();
+
+                                            getActivity().getFragmentManager().popBackStack();
                                         }
                                     });
                                 }
