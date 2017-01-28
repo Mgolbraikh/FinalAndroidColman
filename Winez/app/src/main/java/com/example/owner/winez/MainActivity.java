@@ -19,7 +19,7 @@ public class MainActivity extends Activity {
         final ActionBar actionbar = getActionBar();
         actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        final EnterenceFrag WinezMainFrag = new EnterenceFrag();
+        final RegisterFrag WinezMainFrag = new RegisterFrag();
 
         FragmentTransaction ftr = getFragmentManager().beginTransaction();
         ftr.replace(R.id.WinezActivityMainView, WinezMainFrag);
