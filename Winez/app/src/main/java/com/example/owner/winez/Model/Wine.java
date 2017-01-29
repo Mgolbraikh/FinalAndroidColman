@@ -9,6 +9,10 @@ public class Wine extends Entity {
     public Wine(String name) {
         this.name = name;
     }
+
+    public Wine(){
+
+    }
     public Wine(String name, String uid) {
         super(uid);
         this.name = name;
