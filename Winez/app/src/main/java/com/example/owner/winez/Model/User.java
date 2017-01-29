@@ -1,5 +1,10 @@
 package com.example.owner.winez.Model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by owner on 28-Jan-17.
  */
@@ -8,18 +13,23 @@ public class User extends Entity {
 
     private String name;
     private String email;
+    private Map<String,String> userWines;
 
+    public User(){
+        this.userWines = new HashMap<>();
+    }
     public User(String name, String email, String uid) {
         super(uid);
         this.name = name;
         this.email = email;
+        this.userWines = new HashMap<>();
     }
 
-    public String getNAme() {
+    public String getName() {
         return name;
     }
 
-    public void setNAme(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -29,6 +39,13 @@ public class User extends Entity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    /*
+    * Key: Wine ID, Value: Wine description
+     */
+    public Map<String,String> getUserWines() {
+        return userWines;
     }
 
 

@@ -5,8 +5,11 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MenuItem;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends Activity {
 
@@ -14,37 +17,42 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        showRegistration();
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        final ActionBar actionbar = getActionBar();
-        actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
+        //final ActionBar actionbar = getActionBar();
+//        actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//        actionbar.addTab(actionbar.newTab().setText("My winez").setTabListener(new ActionBar.TabListener() {
+//            @Override
+//            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+//                fragmentTransaction.show(registrationFrag);
+//            }
+//
+//            @Override
+//            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+//                fragmentTransaction.hide(registrationFrag);
+//
+//            }
+//
+//            @Override
+//            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+//
+//            }
+//        }));
 
-        final RegisterFrag WinezMainFrag = new RegisterFrag();
+    }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+    }
+    private void showRegistration() {
+        RegisterFrag registrationFrag = new RegisterFrag();
         FragmentTransaction ftr = getFragmentManager().beginTransaction();
-        ftr.replace(R.id.WinezActivityMainView, WinezMainFrag);
+        ftr.replace(R.id.WinezActivityMainView, registrationFrag);
         ftr.addToBackStack("Registration");
-        ftr.show(WinezMainFrag);
+        ftr.show(registrationFrag);
         ftr.commit();
-
-        actionbar.addTab(actionbar.newTab().setText("My winez").setTabListener(new ActionBar.TabListener() {
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-                fragmentTransaction.show(WinezMainFrag);
-            }
-
-            @Override
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-                fragmentTransaction.hide(WinezMainFrag);
-
-            }
-
-            @Override
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-
-            }
-        }));
-
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -5,6 +5,7 @@ import com.example.owner.winez.Utils.WinezDB;
 import com.google.android.gms.tasks.Task;
 
 import java.util.Date;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 
@@ -17,7 +18,7 @@ public abstract class Entity {
     private long saveTimeStamp;
 
     public Entity(){
-        this.uid = UUID.randomUUID().toString();
+        this.setUid("");
     }
     public Entity(String uid){
         this.uid = uid;
@@ -37,6 +38,9 @@ public abstract class Entity {
 
     public Task<Void> save(){
         this.setSaveTimeStamp(new Date().getTime());
+        if (this.uid == ""){
+            this.setUid(WinezDB.getInstance().getCollection(this.getClass()).push().getKey());
+        }
         return WinezDB.getInstance().getCollection(this.getClass()).child(this.uid).setValue(this);
     }
 }

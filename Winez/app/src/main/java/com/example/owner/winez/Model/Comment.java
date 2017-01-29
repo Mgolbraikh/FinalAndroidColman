@@ -18,6 +18,9 @@ public class Comment extends Entity {
     private String userID;
     private String text;
 
+    public Comment(){
+
+    }
     public Comment(String wineID, String userID, String text) {
         this.wineID = wineID;
         this.userID = userID;
