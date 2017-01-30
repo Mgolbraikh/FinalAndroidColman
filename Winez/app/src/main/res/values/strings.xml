@@ -13,5 +13,8 @@
     <string name="reg_email_hint">someone@domain.com</string>
     <string name="reg_name_hint">Your name</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>
