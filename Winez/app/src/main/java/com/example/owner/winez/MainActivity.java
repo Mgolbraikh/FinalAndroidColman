@@ -2,10 +2,12 @@ package com.example.owner.winez;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -18,6 +20,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         showRegistration();
+
 
         //getActionBar().setDisplayHomeAsUpEnabled(true);
         //final ActionBar actionbar = getActionBar();
@@ -48,11 +51,62 @@ public class MainActivity extends Activity {
     }
     private void showRegistration() {
         RegisterFrag registrationFrag = new RegisterFrag();
-        FragmentTransaction ftr = getFragmentManager().beginTransaction();
-        ftr.replace(R.id.WinezActivityMainView, registrationFrag);
-        ftr.addToBackStack("Registration");
-        ftr.show(registrationFrag);
-        ftr.commit();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.WinezActivityMainView, registrationFrag)
+                .addToBackStack(null)
+                .commit();
+        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                FragmentManager fm = getFragmentManager();
+                if (fm.getBackStackEntryCount() == 0) {
+                    buildTabs();
+                    getFragmentManager().removeOnBackStackChangedListener(this);
+                }
+            }
+
+        });
+    }
+
+    private void buildTabs() {
+        ActionBar bar =  getActionBar();
+
+        bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        final MyWinesListFragment myWines = new MyWinesListFragment();
+        final AllWinesFragment allWines = new AllWinesFragment();
+        bar.addTab(bar.newTab().setText("My Wines").setTabListener(new ActionBar.TabListener() {
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+                fragmentTransaction.show(myWines);
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+                fragmentTransaction.hide(myWines);
+            }
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+            }
+        }));
+
+        bar.addTab(bar.newTab().setText("All Wines").setTabListener(new ActionBar.TabListener() {
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+                fragmentTransaction.show(allWines);
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+                fragmentTransaction.hide(allWines);
+            }
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+            }
+        }));
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -69,9 +123,9 @@ public class MainActivity extends Activity {
 
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            Log.i("MainActivity", "popping backstack");
-            fm.popBackStack();
+        if (fm.getBackStackEntryCount() > 0 &&
+                fm.findFragmentById(R.id.WinezActivityMainView) instanceof RegisterFrag) {
+            this.finish();
         } else {
             Log.i("MainActivity", "nothing on backstack, calling super");
             super.onBackPressed();

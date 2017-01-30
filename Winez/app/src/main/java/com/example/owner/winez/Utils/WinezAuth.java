@@ -82,4 +82,12 @@ public class WinezAuth {
                 .addOnCompleteListener(activity, onComplete);
 
     }
+
+    public void addAuthStateListener(FirebaseAuth.AuthStateListener authStateListener){
+        this.mAuth.addAuthStateListener(authStateListener);
+    }
+
+    public void removeAuthStateListener(FirebaseAuth.AuthStateListener authStateListener){
+        this.mAuth.removeAuthStateListener(authStateListener);
+    }
 }
