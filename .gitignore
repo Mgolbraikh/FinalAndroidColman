@@ -1,8 +1,6 @@
 FinalProject_Step2_204638845_305464166.zip
-<<<<<<< HEAD
 Winez/app/google-services.json
 ~*
-=======
 Winez/build
 .gradle
 /local.properties
@@ -14,5 +12,4 @@ Winez/build
 .externalNativeBuild
 vcs.xml
 *.iml
-~$*
->>>>>>> 05f9ffc7b4256370e2a82fd9a92b0b21d07a639c
+
