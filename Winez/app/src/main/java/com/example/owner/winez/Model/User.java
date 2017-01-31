@@ -23,7 +23,6 @@ public class User extends Entity {
         this.name = name;
         this.email = email;
         this.userWines = new HashMap<>();
-        this.getUserWines().put("Hopa","Hopa");
     }
 
     public String getName() {
