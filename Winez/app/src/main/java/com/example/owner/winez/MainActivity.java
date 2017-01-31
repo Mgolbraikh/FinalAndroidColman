@@ -77,12 +77,12 @@ public class MainActivity extends Activity {
         bar.addTab(bar.newTab().setText("My Wines").setTabListener(new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-                fragmentTransaction.show(myWines);
+                fragmentTransaction.add(R.id.WinezActivityMainView,myWines);
             }
 
             @Override
             public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-                fragmentTransaction.hide(myWines);
+                fragmentTransaction.remove(myWines);
             }
 
             @Override
