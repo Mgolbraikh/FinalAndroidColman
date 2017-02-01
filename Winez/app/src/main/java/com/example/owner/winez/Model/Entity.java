@@ -39,8 +39,8 @@ public abstract class Entity {
     public Task<Void> save(){
         this.setSaveTimeStamp(new Date().getTime());
         if (this.uid == ""){
-            this.setUid(WinezDB.getInstance().getCollection(this.getClass()).push().getKey());
+            this.setUid(WinezDB.getInstance().getCollection(this.getClass().getSimpleName()).push().getKey());
         }
-        return WinezDB.getInstance().getCollection(this.getClass()).child(this.uid).setValue(this);
+        return WinezDB.getInstance().getCollection(this.getClass().getSimpleName()).child(this.uid).setValue(this);
     }
 }

@@ -48,67 +48,63 @@ public class WinezAuth {
         }
     }
 
-    public static WinezAuth getInstance(){
-        if(_instance == null){
+    public static WinezAuth getInstance() {
+        if (_instance == null) {
             _instance = new WinezAuth();
         }
 
-        return  _instance;
+        return _instance;
     }
 
     /**
      * Current connected user
+     *
      * @return
      */
-    public User getCurrentUser(){
+    public User getCurrentUser() {
         return this.currentUser;
     }
 
     public void registerUser(String email,
                              String password,
                              @NonNull Activity activity,
-                             @NonNull OnCompleteListener<AuthResult> onComplete){
-        this.mAuth.createUserWithEmailAndPassword(email,password)
+                             @NonNull OnCompleteListener<AuthResult> onComplete) {
+        this.mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(activity, onComplete);
 
     }
 
-    public void addAuthStateListener(FirebaseAuth.AuthStateListener authStateListener){
+    public void addAuthStateListener(FirebaseAuth.AuthStateListener authStateListener) {
         this.mAuth.addAuthStateListener(authStateListener);
     }
 
-    public void removeAuthStateListener(FirebaseAuth.AuthStateListener authStateListener){
+    public void removeAuthStateListener(FirebaseAuth.AuthStateListener authStateListener) {
         this.mAuth.removeAuthStateListener(authStateListener);
     }
 
-    public boolean isAuthenticated(){
+    public boolean isAuthenticated() {
         return this.mAuth.getCurrentUser() != null;
     }
 
-    private ValueEventListener getCurrentUser(final FirebaseUser usr) {
+    private void getCurrentUser(final FirebaseUser usr) {
         // Getting current user from db
-        return WinezDB.getInstance().getUpdates(User.class, usr.getUid(), new ValueEventListener() {
+        WinezDB.getInstance().getSingle(User.class.getSimpleName(), User.class, usr.getUid(), new WinezDB.GetOnCompleteResult<User>(){
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User gotCurrentUser = dataSnapshot.getValue(User.class);
-
+            public void onResult(User data) {
                 // Making sure we got the right user
-                if (gotCurrentUser != null && gotCurrentUser.getUid().compareTo(usr.getUid()) ==0 ) {
-                    currentUser = gotCurrentUser;
-
-                    // Removing event listener
-                    WinezDB.getInstance().removeListener(this);
-
+                if (data != null && data.getUid().compareTo(usr.getUid()) == 0) {
+                    currentUser = data;
                     onUsergetComplete.onComplete(currentUser);
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancel() {
 
             }
         });
     }
+
 
     /**
      * Add listener for end of get user
