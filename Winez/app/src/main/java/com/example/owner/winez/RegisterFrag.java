@@ -50,7 +50,6 @@ public class RegisterFrag extends Fragment {
                                                    Toast.LENGTH_SHORT).show();
                                     enter.setEnabled(true);
                                 }else{
-
                                     // Adding user to db
                                     User usrToAdd =
                                             new User(username.getText().toString(),
@@ -63,7 +62,6 @@ public class RegisterFrag extends Fragment {
                                             Toast.makeText(getActivity(),
                                                     "Successful registration!",
                                                      Toast.LENGTH_SHORT).show();
-
                                             getActivity().getFragmentManager().popBackStack();
                                         }
                                     });
