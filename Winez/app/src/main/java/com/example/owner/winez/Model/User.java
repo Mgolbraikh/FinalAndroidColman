@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class User extends Entity {
 
+    private String Id;
     private String name;
     private String email;
     private Map<String,String> userWines;
@@ -37,6 +38,14 @@ public class User extends Entity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
     }
 
     /**
