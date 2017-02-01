@@ -57,6 +57,17 @@ public class WinezDB {
         return this.getCollection(entityName).child(id);
     }
 
+    public void saveWithId(String entityName, Entity toSave){
+        this.mDatabase.getReference(entityName).setValue(toSave.getUid(),toSave);
+    }
+
+    public void saveWithoutId(String entityName, Entity toSave) {
+        DatabaseReference ref = this.mDatabase.getReference(entityName).push();
+        String key = ref.getKey();
+        ref.setValue(key,toSave);
+        toSave.setUid(key);
+    }
+
     public interface GetOnCompleteResult<T>{
         public void onResult(T data);
         public void onCancel();
