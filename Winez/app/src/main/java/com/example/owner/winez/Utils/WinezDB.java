@@ -1,5 +1,7 @@
 package com.example.owner.winez.Utils;
 
+
+import com.example.owner.winez.Model.Entity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -7,15 +9,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
+
 /**
  * Created by Ziv on 28/01/2017.
  */
 
 public class WinezDB {
-    private DatabaseReference mDatabase;
+    private FirebaseDatabase mDatabase;
     private static WinezDB _instance;
     private WinezDB(){
-        this.mDatabase = FirebaseDatabase.getInstance().getReference();
+        this.mDatabase = FirebaseDatabase.getInstance();
     }
 
     public static WinezDB getInstance(){
@@ -25,23 +28,37 @@ public class WinezDB {
         return _instance;
     }
 
-    public DatabaseReference getCollection(Class classT){
-        return this.mDatabase.child(classT.getSimpleName());
+    public DatabaseReference getCollection(String entityName){
+        return this.mDatabase.getReference(entityName);
     }
 
-    public void getSingle(Class classT, String id, ValueEventListener valueEventListener){
-        getChild(classT, id).addListenerForSingleValueEvent(valueEventListener);
+    /**
+     *
+     * @param entityName The name of the entity in the DB
+     * @param tclass the returned class
+     * @param id The wanted id
+     * @param getOnCompleteResult The callback interface
+     * @param <C> Returned class
+     */
+    public <C extends Entity> void getSingle(String entityName, final Class<C> tclass, String id, final GetOnCompleteResult<C> getOnCompleteResult){
+        getChild(entityName, id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                getOnCompleteResult.onResult((C)dataSnapshot.getValue(tclass));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                getOnCompleteResult.onCancel();
+            }
+        });
+    }
+    private DatabaseReference getChild(String entityName, String id) {
+        return this.getCollection(entityName).child(id);
     }
 
-    private DatabaseReference getChild(Class classT, String id) {
-        return this.getCollection(classT).child(id);
-    }
-
-    public void getUpdates(Class classT,String id,ValueEventListener valueEventListener){
-        this.getChild(classT,id).addValueEventListener(valueEventListener);
-    }
-
-    public void removeListener(ValueEventListener valueEventListener){
-        this.mDatabase.removeEventListener(valueEventListener);
+    public interface GetOnCompleteResult<T>{
+        public void onResult(T data);
+        public void onCancel();
     }
 }

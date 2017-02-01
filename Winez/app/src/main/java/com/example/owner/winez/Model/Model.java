@@ -26,7 +26,11 @@ public class Model {
     }
 
     public interface GetUser{
-        public void onResult(User student);
+        public void onResult(User usr);
+        public void onCancel();
+    }
+    public interface GetWine{
+        public void onResult(Wine wine);
         public void onCancel();
     }
 }

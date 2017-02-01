@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ public class MyWinesListFragment extends Fragment {
         ListView list = (ListView)view.findViewById(R.id.mmywines_list);
         mAdapter = new MyWinesAdapter();
         list.setAdapter(mAdapter);
+        list.setEmptyView(view.findViewById(R.id.mywines_empty_txt));
         return view;
 
     }
@@ -52,8 +54,8 @@ public class MyWinesListFragment extends Fragment {
 
         @Override
         public Object getItem(int i) {
-            String id = (String)currentUser.getUserWines().keySet().toArray()[i];
-            return currentUser.getUserWines().get(id);
+            return currentUser.getUserWines().keySet().toArray()[i];
+
         }
 
         @Override
@@ -65,10 +67,21 @@ public class MyWinesListFragment extends Fragment {
         public View getView(int i, View view, ViewGroup viewGroup) {
             if (view == null){
                 view = LayoutInflater.from(getActivity()).inflate(R.layout.row_my_wines_list, null);
+                ImageView removeImage = (ImageView) view.findViewById(R.id.mywines_remove_image);
+                removeImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        currentUser.getUserWines().remove(view.getTag());
+                        notifyDataSetChanged();
+                        currentUser.save();
+                    }
+                });
             }
-
+            Object item = this.getItem(i);
             TextView text = (TextView) view.findViewById(R.id.mywines_row_text);
-            text.setText(this.getItem(i).toString());
+            text.setText(currentUser.getUserWines().get(item));
+            ImageView removeImage = (ImageView) view.findViewById(R.id.mywines_remove_image);
+            removeImage.setTag(item);
             return view;
         }
     }

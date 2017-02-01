@@ -1,8 +1,6 @@
 package com.example.owner.winez.Model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,9 +48,10 @@ public class User extends Entity {
         Id = id;
     }
 
-    /*
-        * Key: Wine ID, Value: Wine description
-         */
+    /**
+     * Key is wine uid and value is wine title
+     * @return
+     */
     public Map<String,String> getUserWines() {
         return userWines;
     }

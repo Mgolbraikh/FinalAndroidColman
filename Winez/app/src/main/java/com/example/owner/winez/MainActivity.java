@@ -11,6 +11,8 @@ import android.transition.Transition;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.owner.winez.Model.User;
+import com.example.owner.winez.Utils.WinezAuth;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends Activity {
@@ -19,30 +21,19 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        showRegistration();
 
+        // Setting event for after authentication is complete
+        WinezAuth.getInstance().setOnUserGetComplete(new WinezAuth.OnUserGetComplete() {
+            @Override
+            public void onComplete(User user) {
+                buildTabs();
+            }
+        });
+        if (!WinezAuth.getInstance().isAuthenticated()) {
+            showRegistration();
+        }
 
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
-        //final ActionBar actionbar = getActionBar();
-//        actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-//        actionbar.addTab(actionbar.newTab().setText("My winez").setTabListener(new ActionBar.TabListener() {
-//            @Override
-//            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-//                fragmentTransaction.show(registrationFrag);
-//            }
-//
-//            @Override
-//            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-//                fragmentTransaction.hide(registrationFrag);
-//
-//            }
-//
-//            @Override
-//            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-//
-//            }
-//        }));
-
+        // TODO: Sign out and stuff
     }
 
     @Override
@@ -55,17 +46,6 @@ public class MainActivity extends Activity {
                 .replace(R.id.WinezActivityMainView, registrationFrag)
                 .addToBackStack(null)
                 .commit();
-        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                FragmentManager fm = getFragmentManager();
-                if (fm.getBackStackEntryCount() == 0) {
-                    buildTabs();
-                    getFragmentManager().removeOnBackStackChangedListener(this);
-                }
-            }
-
-        });
     }
 
     private void buildTabs() {
@@ -94,12 +74,12 @@ public class MainActivity extends Activity {
         bar.addTab(bar.newTab().setText("All Wines").setTabListener(new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-                fragmentTransaction.show(allWines);
+                fragmentTransaction.add(R.id.WinezActivityMainView,allWines);
             }
 
             @Override
             public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-                fragmentTransaction.hide(allWines);
+                fragmentTransaction.remove(allWines);
             }
 
             @Override
