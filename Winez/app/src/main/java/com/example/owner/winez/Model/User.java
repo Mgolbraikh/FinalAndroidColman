@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class User extends Entity {
 
+    private String Id;
     private String name;
     private String email;
     private Map<String,String> userWines;
@@ -41,9 +42,17 @@ public class User extends Entity {
         this.email = email;
     }
 
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
+    }
+
     /*
-    * Key: Wine ID, Value: Wine description
-     */
+        * Key: Wine ID, Value: Wine description
+         */
     public Map<String,String> getUserWines() {
         return userWines;
     }

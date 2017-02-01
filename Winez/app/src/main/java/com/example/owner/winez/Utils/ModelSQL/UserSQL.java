@@ -1,4 +1,4 @@
-package com.example.owner.winez.Utils;
+package com.example.owner.winez.Utils.ModelSQL;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
 import com.example.owner.winez.Model.User;
+import com.example.owner.winez.Utils.LastUpdateSql;
 
 import java.util.LinkedList;
 import java.util.List;
