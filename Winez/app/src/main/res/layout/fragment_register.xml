@@ -80,6 +80,7 @@
             android:inputType="textPassword" />
     </LinearLayout>
 
+
     <!-- Button enter-->
     <Button
         android:id="@+id/reg_enter"

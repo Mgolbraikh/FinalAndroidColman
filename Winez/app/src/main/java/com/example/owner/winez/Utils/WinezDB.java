@@ -37,8 +37,8 @@ public class WinezDB {
         return this.getCollection(classT).child(id);
     }
 
-    public void getUpdates(Class classT,String id,ValueEventListener valueEventListener){
-        this.getChild(classT,id).addValueEventListener(valueEventListener);
+    public ValueEventListener getUpdates(Class classT,String id,ValueEventListener valueEventListener){
+        return this.getChild(classT,id).addValueEventListener(valueEventListener);
     }
 
     public void removeListener(ValueEventListener valueEventListener){
