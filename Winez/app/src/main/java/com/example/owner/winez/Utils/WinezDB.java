@@ -1,13 +1,18 @@
 package com.example.owner.winez.Utils;
 
 
+import android.util.Log;
+
 import com.example.owner.winez.Model.Entity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.Query;
 
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -61,6 +66,29 @@ public class WinezDB {
         this.mDatabase.getReference(entityName).setValue(toSave.getUid(),toSave);
     }
 
+    public <C extends Entity> void getAll(final String entityName, final Class<C> tclass, String id,
+                                          final GetOnCompleteResults<C> GetOnCompleteResults, double lastUpdateDate ){
+        getCollection(entityName).orderByChild("lastUpdated").startAt(lastUpdateDate)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //getOnCompleteResult.onResult((C)dataSnapshot.getValue(tclass));
+                final List<C> entityList = new LinkedList<C>();
+                for (DataSnapshot entitySnapshot : dataSnapshot.getChildren()) {
+                    C entity = entitySnapshot .getValue(tclass);
+                    Log.d("TAG", entity.getUid());
+                    entityList.add(entity);
+                }
+                GetOnCompleteResults.onResult(entityList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                GetOnCompleteResults.onCancel();
+            }
+        });
+    }
+
     public void saveWithoutId(String entityName, Entity toSave) {
         DatabaseReference ref = this.mDatabase.getReference(entityName).push();
         String key = ref.getKey();
@@ -70,6 +98,15 @@ public class WinezDB {
 
     public interface GetOnCompleteResult<T>{
         public void onResult(T data);
+        public void onCancel();
+    }
+
+    /**
+     *
+     * @see this is fir recieving lists
+     */
+    public interface GetOnCompleteResults<T>{
+        public void onResult(List<T> data);
         public void onCancel();
     }
 }
