@@ -47,14 +47,14 @@ public class Model {
 
     /**
      * Get all users from the remote DB
-     * @param getOnCompleteResult
+     * @param getOnCompleteResults
      */
-    public void getAllUsersAsynch(final WinezDB.GetOnCompleteResult<User> getOnCompleteResult){
+    public void getAllUsersAsynch(final WinezDB.GetOnCompleteResults<User> getOnCompleteResults){
         //1. get the last update date
-        // final double lastUpdateDate = UserSQL.getLastUpdateDate(modelLocalSql.getReadbleDB());
+        final double lastUpdateDate = UserSQL.getLastUpdateDate(modelLocalSql.getReadbleDB());
 
         //2. get all records that where updated since last update date
-        //modelRemoteSql.getCollection(User.class.getSimpleName() ,lastUpdateDate);
+        modelRemoteSql.getAll(User.class.getSimpleName(), User.class, getOnCompleteResults ,lastUpdateDate);
 
         //modelRemoteSql.getCollection()
     }
@@ -62,14 +62,14 @@ public class Model {
 
     /**
      * Get all Wines from the remote DB
-     * @param getOnCompleteResult
+     * @param getOnCompleteResults
      */
-    public void getAllWinesAsynch(final WinezDB.GetOnCompleteResult<User> getOnCompleteResult){
+    public void getAllWinesAsynch(final WinezDB.GetOnCompleteResults<Wine> getOnCompleteResults){
         //1. get the last update date
          final double lastUpdateDate = WineSQL.getLastUpdateDate(modelLocalSql.getReadbleDB());
 
         //2. get all records that where updated since last update date
-        //modelRemoteSql.getCollection(User.class.getSimpleName() ,lastUpdateDate);
+        modelRemoteSql.getAll(Wine.class.getSimpleName(), Wine.class, getOnCompleteResults ,lastUpdateDate);
 
         //modelRemoteSql.getCollection()
     }
