@@ -68,7 +68,7 @@ public class WinezDB {
 
     public <C extends Entity> void getAll(final String entityName, final Class<C> tclass,double lastUpdateDate,
                                           final GetOnCompleteResults<C> GetOnCompleteResults){
-        getCollection(entityName).orderByChild("lastUpdated").startAt(lastUpdateDate)
+        getCollection(entityName).orderByChild("saveTimeStamp").startAt(lastUpdateDate)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
