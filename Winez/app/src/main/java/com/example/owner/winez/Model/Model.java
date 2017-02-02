@@ -25,6 +25,15 @@ public class Model {
         return instance ;
     }
 
+    /**
+     * Get a user by user uid
+     * @param id
+     * @param getOnCompleteResult
+     */
+    public void getUser(String id, WinezDB.GetOnCompleteResult<User> getOnCompleteResult){
+        this.modelRemoteSql.getSingle(User.class.getSimpleName(), User.class,id, getOnCompleteResult);
+    }
+
     public interface GetUser{
         public void onResult(User usr);
         public void onCancel();
