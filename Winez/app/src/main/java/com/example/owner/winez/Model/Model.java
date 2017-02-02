@@ -3,6 +3,8 @@ package com.example.owner.winez.Model;
 import android.graphics.PorterDuff;
 
 import com.example.owner.winez.MyApplication;
+import com.example.owner.winez.Utils.ModelSQL.UserSQL;
+import com.example.owner.winez.Utils.ModelSQL.WineSQL;
 import com.example.owner.winez.Utils.WinesLocalDB;
 import com.example.owner.winez.Utils.WinezDB;
 
@@ -34,12 +36,41 @@ public class Model {
         this.modelRemoteSql.getSingle(User.class.getSimpleName(), User.class,id, getOnCompleteResult);
     }
 
-    public interface GetUser{
-        public void onResult(User usr);
-        public void onCancel();
+    /**
+     * Get a wine by wine uid
+     * @param id
+     * @param getOnCompleteResult
+     */
+    public void getWine(String id, WinezDB.GetOnCompleteResult<Wine> getOnCompleteResult){
+        this.modelRemoteSql.getSingle(Wine.class.getSimpleName(), Wine.class,id, getOnCompleteResult);
     }
-    public interface GetWine{
-        public void onResult(Wine wine);
-        public void onCancel();
+
+    /**
+     * Get all users from the remote DB
+     * @param getOnCompleteResult
+     */
+    public void getAllUsersAsynch(final WinezDB.GetOnCompleteResult<User> getOnCompleteResult){
+        //1. get the last update date
+        // final double lastUpdateDate = UserSQL.getLastUpdateDate(modelLocalSql.getReadbleDB());
+
+        //2. get all records that where updated since last update date
+        //modelRemoteSql.getCollection(User.class.getSimpleName() ,lastUpdateDate);
+
+        //modelRemoteSql.getCollection()
+    }
+
+
+    /**
+     * Get all Wines from the remote DB
+     * @param getOnCompleteResult
+     */
+    public void getAllWinesAsynch(final WinezDB.GetOnCompleteResult<User> getOnCompleteResult){
+        //1. get the last update date
+         final double lastUpdateDate = WineSQL.getLastUpdateDate(modelLocalSql.getReadbleDB());
+
+        //2. get all records that where updated since last update date
+        //modelRemoteSql.getCollection(User.class.getSimpleName() ,lastUpdateDate);
+
+        //modelRemoteSql.getCollection()
     }
 }
