@@ -66,8 +66,8 @@ public class WinezDB {
         this.mDatabase.getReference(entityName).setValue(toSave.getUid(),toSave);
     }
 
-    public <C extends Entity> void getAll(final String entityName, final Class<C> tclass,
-                                          final GetOnCompleteResults<C> GetOnCompleteResults, double lastUpdateDate ){
+    public <C extends Entity> void getAll(final String entityName, final Class<C> tclass,double lastUpdateDate,
+                                          final GetOnCompleteResults<C> GetOnCompleteResults){
         getCollection(entityName).orderByChild("lastUpdated").startAt(lastUpdateDate)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

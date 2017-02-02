@@ -54,7 +54,7 @@ public class Model {
         final double lastUpdateDate = UserSQL.getLastUpdateDate(modelLocalSql.getReadbleDB());
 
         //2. get all records that where updated since last update date
-        modelRemoteSql.getAll(User.class.getSimpleName(), User.class, getOnCompleteResults ,lastUpdateDate);
+        modelRemoteSql.getAll(User.class.getSimpleName(), User.class, lastUpdateDate, getOnCompleteResults);
 
         //modelRemoteSql.getCollection()
     }
@@ -69,7 +69,7 @@ public class Model {
          final double lastUpdateDate = WineSQL.getLastUpdateDate(modelLocalSql.getReadbleDB());
 
         //2. get all records that where updated since last update date
-        modelRemoteSql.getAll(Wine.class.getSimpleName(), Wine.class, getOnCompleteResults ,lastUpdateDate);
+        modelRemoteSql.getAll(Wine.class.getSimpleName(), Wine.class, lastUpdateDate, getOnCompleteResults);
 
         //modelRemoteSql.getCollection()
     }
