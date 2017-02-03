@@ -3,18 +3,21 @@ package com.example.owner.winez.Utils;
 
 import android.support.annotation.NonNull;
 
+
 import com.example.owner.winez.Model.Entity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 
 /**
@@ -112,6 +115,29 @@ public class WinezDB {
         this.mDatabase.getReference(entityName).setValue(toSave.getUid(),toSave);
     }
 
+    public <C extends Entity> void getAll(final String entityName, final Class<C> tclass,double lastUpdateDate,
+                                          final GetOnCompleteResults<C> GetOnCompleteResults){
+        getCollection(entityName).orderByChild("saveTimeStamp").startAt(lastUpdateDate)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //getOnCompleteResult.onResult((C)dataSnapshot.getValue(tclass));
+                final List<C> entityList = new LinkedList<C>();
+                for (DataSnapshot entitySnapshot : dataSnapshot.getChildren()) {
+                    C entity = entitySnapshot .getValue(tclass);
+                    Log.d("TAG", entity.getUid());
+                    entityList.add(entity);
+                }
+                GetOnCompleteResults.onResult(entityList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                GetOnCompleteResults.onCancel();
+            }
+        });
+    }
+
     public void saveWithoutId(String entityName, Entity toSave) {
         toSave.setSaveTimeStamp(new Date().getTime());
         DatabaseReference ref = this.mDatabase.getReference(entityName).push();
@@ -135,5 +161,14 @@ public class WinezDB {
     public interface GetOnCompleteResult<T>{
         public void onResult(T data);
         public void onCancel(String err);
+    }
+
+    /**
+     *
+     * @see this is fir recieving lists
+     */
+    public interface GetOnCompleteResults<T>{
+        public void onResult(List<T> data);
+        public void onCancel();
     }
 }

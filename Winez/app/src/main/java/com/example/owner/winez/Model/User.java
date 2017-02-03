@@ -1,5 +1,7 @@
 package com.example.owner.winez.Model;
 
+import com.google.firebase.database.ServerValue;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +18,9 @@ public class User extends Entity {
 
     public User(){
         this.userWines = new HashMap<>();
+
+        // Put timestemp of the entity
+        //userWines.put("lastUpdated", ServerValue.TIMESTAMP);
     }
     public User(String name, String email, String uid) {
         super(uid);
