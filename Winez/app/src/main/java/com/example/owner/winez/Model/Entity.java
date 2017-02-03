@@ -1,13 +1,7 @@
 package com.example.owner.winez.Model;
 
-
-import com.example.owner.winez.Utils.WinezDB;
-import com.google.android.gms.tasks.Task;
-
-import java.util.Date;
-import java.util.StringTokenizer;
-import java.util.UUID;
-
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Ziv on 28/01/2017.
@@ -36,11 +30,13 @@ public abstract class Entity {
         this.saveTimeStamp = timeStamp;
     }
 
-    public Task<Void> save(){
-        this.setSaveTimeStamp(new Date().getTime());
-        if (this.uid == ""){
-            this.setUid(WinezDB.getInstance().getCollection(this.getClass().getSimpleName()).push().getKey());
-        }
-        return WinezDB.getInstance().getCollection(this.getClass().getSimpleName()).child(this.uid).setValue(this);
+
+    public Map<String,Object> toMap(){
+        Map<String,Object> toRet = new HashMap<>();
+        toRet.put("uid", this.getUid());
+        toRet.put("saveTimeStamp", this.getSaveTimeStamp());
+
+        return toRet;
     }
+
 }

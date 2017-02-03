@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.owner.winez.Model.Model;
 import com.example.owner.winez.Model.User;
 import com.example.owner.winez.Utils.WinezAuth;
 
@@ -73,7 +74,7 @@ public class MyWinesListFragment extends Fragment {
                     public void onClick(View view) {
                         currentUser.getUserWines().remove(view.getTag());
                         notifyDataSetChanged();
-                        currentUser.save();
+                        Model.getInstance().saveCurrentUser(currentUser);
                     }
                 });
             }

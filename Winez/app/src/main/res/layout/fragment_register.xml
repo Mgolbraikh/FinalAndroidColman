@@ -62,6 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp"
+            android:inputType="textEmailAddress"
             android:hint="@string/reg_email_hint" />
 
 
@@ -80,7 +81,12 @@
             android:inputType="textPassword" />
     </LinearLayout>
 
-
+    <CheckBox
+        android:id="@+id/reg_already_user_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="@string/already_a_user"/>
     <!-- Button enter-->
     <Button
         android:id="@+id/reg_enter"
