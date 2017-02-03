@@ -113,28 +113,6 @@ public class WinezDB {
         this.mDatabase.getReference(entityName).setValue(toSave.getUid(),toSave);
     }
 
-    public <C extends Entity> void getAll(final String entityName, final Class<C> tclass,double lastUpdateDate,
-                                          final GetOnCompleteResults<C> GetOnCompleteResults){
-        getCollection(entityName).orderByChild("saveTimeStamp").startAt(lastUpdateDate)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //getOnCompleteResult.onResult((C)dataSnapshot.getValue(tclass));
-                final List<C> entityList = new LinkedList<C>();
-                for (DataSnapshot entitySnapshot : dataSnapshot.getChildren()) {
-                    C entity = entitySnapshot .getValue(tclass);
-                    Log.d("TAG", entity.getUid());
-                    entityList.add(entity);
-                }
-                GetOnCompleteResults.onResult(entityList);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                GetOnCompleteResults.onCancel();
-            }
-        });
-    }
 
     public void saveWithoutId(String entityName, Entity toSave) {
         toSave.setSaveTimeStamp(new Date().getTime());
