@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 
 import com.example.owner.winez.Model.Entity;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -108,31 +109,31 @@ public class WinezDB {
         return this.getCollection(entityName).child(id);
     }
 
-    public void saveWithId(String entityName, Entity toSave){
+    public Task<Void> saveWithId(String entityName, Entity toSave){
         toSave.setSaveTimeStamp(new Date().getTime());
-        this.mDatabase.getReference(entityName).setValue(toSave.getUid(),toSave);
+        return this.mDatabase.getReference(entityName).child(toSave.getUid()).setValue(toSave.toMap());
     }
 
 
-    public void saveWithoutId(String entityName, Entity toSave) {
+    public Task<Void> saveWithoutId(String entityName, Entity toSave) {
         toSave.setSaveTimeStamp(new Date().getTime());
         DatabaseReference ref = this.mDatabase.getReference(entityName).push();
         String key = ref.getKey();
-        ref.setValue(key,toSave);
         toSave.setUid(key);
+        return ref.setValue(key,toSave.toMap());
     }
 
     public void saveChild(String entityName, String parentId, Entity toSave){
         toSave.setSaveTimeStamp(new Date().getTime());
-        this.getCollection(entityName).child(parentId).setValue(toSave.getUid(),toSave);
+        this.getCollection(entityName).child(parentId).child(toSave.getUid()).setValue(toSave.toMap());
     }
 
     public void saveChildWithoutId(String entityName, String parentId, Entity toSave){
         toSave.setSaveTimeStamp(new Date().getTime());
         DatabaseReference ref = this.getCollection(entityName).child(parentId).push();
         String key = ref.getKey();
-        ref.setValue(key,toSave);
         toSave.setUid(key);
+        ref.setValue(key,toSave.toMap());
     }
     public interface GetOnCompleteResult<T>{
         public void onResult(T data);

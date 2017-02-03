@@ -1,17 +1,15 @@
 package com.example.owner.winez.Model;
 
-import android.graphics.PorterDuff;
-import android.util.Log;
-
 import com.example.owner.winez.MyApplication;
 import com.example.owner.winez.Utils.ModelSQL.UserSQL;
 import com.example.owner.winez.Utils.ModelSQL.WineSQL;
 import com.example.owner.winez.Utils.WinesLocalDB;
+import com.example.owner.winez.Utils.WinezAuth;
 import com.example.owner.winez.Utils.WinezDB;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by owner on 01-Feb-17.
@@ -58,6 +56,9 @@ public class Model {
         this.mRemoteDB.getAllChildren(Comment.class.getSimpleName(), Comment.class, wineId, getOnCompleteResult);
     }
 
+    public Task<Void> saveCurrentUser(User toSave){
+        return this.mRemoteDB.saveWithId(User.class.getSimpleName(),toSave);
+    }
     /**
      * Get all users from the remote DB
      * @param getOnCompleteResults
@@ -88,5 +89,9 @@ public class Model {
         //modelRemoteSql.getAll(Wine.class.getSimpleName(), Wine.class, lastUpdateDate, getOnCompleteResults);
 
         //modelRemoteSql.getCollection()
+    }
+
+    public Task<AuthResult> authenticate(String email, String password) {
+        return WinezAuth.getInstance().authenticate(email,password);
     }
 }
