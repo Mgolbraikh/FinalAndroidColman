@@ -1,6 +1,7 @@
 package com.example.owner.winez.Model;
 
 import android.graphics.PorterDuff;
+import android.util.Log;
 
 import com.example.owner.winez.MyApplication;
 import com.example.owner.winez.Utils.ModelSQL.UserSQL;
@@ -8,22 +9,29 @@ import com.example.owner.winez.Utils.ModelSQL.WineSQL;
 import com.example.owner.winez.Utils.WinesLocalDB;
 import com.example.owner.winez.Utils.WinezDB;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by owner on 01-Feb-17.
  */
 
 
 public class Model {
-    private final static Model instance = new Model();
-    WinezDB modelRemoteSql;
+    private static Model instance;
+    WinezDB mRemoteDB;
     WinesLocalDB modelLocalSql;
 
     private Model() {
         modelLocalSql = new WinesLocalDB(MyApplication.getAppContext());
-        modelRemoteSql = WinezDB.getInstance();
+        mRemoteDB = WinezDB.getInstance();
     }
 
-    public Model getInstance(){
+    public static Model getInstance(){
+        if (instance == null){
+            instance = new Model();
+        }
         return instance ;
     }
 
@@ -33,7 +41,7 @@ public class Model {
      * @param getOnCompleteResult
      */
     public void getUser(String id, WinezDB.GetOnCompleteResult<User> getOnCompleteResult){
-        this.modelRemoteSql.getSingle(User.class.getSimpleName(), User.class,id, getOnCompleteResult);
+        this.mRemoteDB.getSingle(User.class.getSimpleName(), User.class,id, getOnCompleteResult);
     }
 
     /**
@@ -42,7 +50,12 @@ public class Model {
      * @param getOnCompleteResult
      */
     public void getWine(String id, WinezDB.GetOnCompleteResult<Wine> getOnCompleteResult){
-        this.modelRemoteSql.getSingle(Wine.class.getSimpleName(), Wine.class,id, getOnCompleteResult);
+        this.mRemoteDB.getSingle(Wine.class.getSimpleName(), Wine.class,id, getOnCompleteResult);
+    }
+
+    public void getCommentsForWine(String wineId,
+                                   WinezDB.GetOnCompleteResult<List<Comment>> getOnCompleteResult){
+        this.mRemoteDB.getAllChildren(Comment.class.getSimpleName(), Comment.class, wineId, getOnCompleteResult);
     }
 
     /**

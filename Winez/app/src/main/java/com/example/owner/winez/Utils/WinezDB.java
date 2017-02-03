@@ -1,6 +1,8 @@
 package com.example.owner.winez.Utils;
 
 
+import android.support.annotation.NonNull;
+
 import com.example.owner.winez.Model.Entity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -8,6 +10,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -44,32 +51,89 @@ public class WinezDB {
         getChild(entityName, id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                getOnCompleteResult.onResult((C)dataSnapshot.getValue(tclass));
+                getOnCompleteResult.onResult(dataSnapshot.getValue(tclass));
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                getOnCompleteResult.onCancel();
+                getOnCompleteResult.onCancel(databaseError.getMessage());
             }
         });
+    }
+
+    public <C extends Entity> void getAll(final String entityName, final Class<C> tClass, final GetOnCompleteResult<List<C>> getOnCompleteResult){
+        getCollection(entityName).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                getOnCompleteResult.onResult((List<C>)getChildren(tClass,dataSnapshot));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                getOnCompleteResult.onCancel(databaseError.getMessage());
+            }
+        });
+    }
+
+    public <C extends Entity> void getAllChildren(final String entityName,
+                                                  final Class<C> tClass,
+                                                  String parentID,
+                                                  final GetOnCompleteResult<List<C>> getOnCompleteResult){
+        getChild(entityName,parentID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<C> toReturn = getChildren(tClass, dataSnapshot);
+                getOnCompleteResult.onResult(toReturn);
+            }
+
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                getOnCompleteResult.onCancel(databaseError.getMessage());
+            }
+        });
+    }
+
+    private <C extends Entity> List<C> getChildren(Class<C> tClass ,DataSnapshot dataSnapshot) {
+        List<C> toReturn = new ArrayList<C>();
+        for (DataSnapshot snap : dataSnapshot.getChildren()){
+            toReturn.add(snap.getValue(tClass));
+        }
+        return toReturn;
     }
     private DatabaseReference getChild(String entityName, String id) {
         return this.getCollection(entityName).child(id);
     }
 
     public void saveWithId(String entityName, Entity toSave){
+        toSave.setSaveTimeStamp(new Date().getTime());
         this.mDatabase.getReference(entityName).setValue(toSave.getUid(),toSave);
     }
 
     public void saveWithoutId(String entityName, Entity toSave) {
+        toSave.setSaveTimeStamp(new Date().getTime());
         DatabaseReference ref = this.mDatabase.getReference(entityName).push();
         String key = ref.getKey();
         ref.setValue(key,toSave);
         toSave.setUid(key);
     }
 
+    public void saveChild(String entityName, String parentId, Entity toSave){
+        toSave.setSaveTimeStamp(new Date().getTime());
+        this.getCollection(entityName).child(parentId).setValue(toSave.getUid(),toSave);
+    }
+
+    public void saveChildWithoutId(String entityName, String parentId, Entity toSave){
+        toSave.setSaveTimeStamp(new Date().getTime());
+        DatabaseReference ref = this.getCollection(entityName).child(parentId).push();
+        String key = ref.getKey();
+        ref.setValue(key,toSave);
+        toSave.setUid(key);
+    }
     public interface GetOnCompleteResult<T>{
         public void onResult(T data);
-        public void onCancel();
+        public void onCancel(String err);
     }
 }

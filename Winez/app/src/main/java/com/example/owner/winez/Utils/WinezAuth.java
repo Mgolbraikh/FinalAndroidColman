@@ -99,7 +99,7 @@ public class WinezAuth {
             }
 
             @Override
-            public void onCancel() {
+            public void onCancel(String err) {
 
             }
         });
