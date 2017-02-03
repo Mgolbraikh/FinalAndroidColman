@@ -17,14 +17,16 @@ public class Comment extends Entity {
     private String wineID;
     private String userID;
     private String text;
+    private String userName;
 
     public Comment(){
 
     }
-    public Comment(String wineID, String userID, String text) {
+    public Comment(String wineID, String userID, String text, String userName) {
         this.wineID = wineID;
         this.userID = userID;
         this.text = text;
+        this.userName = userName;
     }
 
     public String getUserID(){
@@ -48,5 +50,13 @@ public class Comment extends Entity {
 
     public void setWineID(String wineID) {
         this.wineID = wineID;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

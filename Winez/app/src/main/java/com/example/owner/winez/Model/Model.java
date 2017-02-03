@@ -72,6 +72,9 @@ public class Model {
         //modelRemoteSql.getCollection()
     }
 
+    public void saveComment(Comment cmt){
+        this.mRemoteDB.saveChildWithoutId(Comment.class.getSimpleName(), cmt.getWineID(), cmt);
+    }
 
     /**
      * Get all Wines from the remote DB

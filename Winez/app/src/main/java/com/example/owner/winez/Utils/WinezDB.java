@@ -69,7 +69,7 @@ public class WinezDB {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                getOnCompleteResult.onResult((List<C>)getChildren(tClass,dataSnapshot));
+                getOnCompleteResult.onResult(getChildren(tClass,dataSnapshot));
             }
 
             @Override
@@ -89,8 +89,6 @@ public class WinezDB {
                 List<C> toReturn = getChildren(tClass, dataSnapshot);
                 getOnCompleteResult.onResult(toReturn);
             }
-
-
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
