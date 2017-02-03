@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class User extends Entity {
 
-    private String Id;
     private String name;
     private String email;
     private Map<String,String> userWines;
@@ -22,6 +21,16 @@ public class User extends Entity {
         // Put timestemp of the entity
         //userWines.put("lastUpdated", ServerValue.TIMESTAMP);
     }
+
+    @Override
+    public Map<String, Object> toMap() {
+        Map<String,Object> toRet = super.toMap();
+        toRet.put("name", this.getName());
+        toRet.put("email", this.getEmail());
+        toRet.put("userWines",this.getUserWines());
+        return toRet;
+    }
+
     public User(String name, String email, String uid) {
         super(uid);
         this.name = name;
@@ -43,14 +52,6 @@ public class User extends Entity {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getId() {
-        return Id;
-    }
-
-    public void setId(String id) {
-        Id = id;
     }
 
     /**

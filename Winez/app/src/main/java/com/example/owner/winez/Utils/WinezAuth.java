@@ -118,7 +118,11 @@ public class WinezAuth {
             onUserGetComplete.onComplete(this.currentUser);
         }
     }
-    
+
+    public Task<AuthResult> authenticate(String email, String password) {
+        return this.mAuth.signInWithEmailAndPassword(email,password);
+    }
+
     public interface OnUserGetComplete{
         void onComplete(User user);
     }
