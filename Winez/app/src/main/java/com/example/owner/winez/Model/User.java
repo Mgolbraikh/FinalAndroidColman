@@ -55,7 +55,8 @@ public class User extends Entity {
     }
 
     /**
-     * Key is wine uid and value is wine title
+     * Key is wine uid and value is wine title.
+     * Returns an empty if none exists
      * @return
      */
     public Map<String,String> getUserWines() {

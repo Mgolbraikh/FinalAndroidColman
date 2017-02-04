@@ -19,23 +19,21 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         // Setting event for after authentication is complete
-        Model.getInstance().setOnSignInListener(new WinezAuth.OnSignIn() {
+        Model.getInstance().setOnAuthChangeListener(new WinezAuth.OnAuthChangeListener() {
             @Override
-            public void onResult(User usr) {
+            public void onLogin(User usr) {
                 buildTabs();
             }
-        });
-        Model.getInstance().setOnSignOutListener(new WinezAuth.OnSignOut() {
+
             @Override
-            public void onResult() {
+            public void onLogout() {
+                getFragmentManager().popBackStack();
                 showRegistration();
             }
         });
         if (!Model.getInstance().isAuthenticated()) {
             showRegistration();
         }
-
-        // TODO: Sign out and stuff
     }
 
     private void showRegistration() {

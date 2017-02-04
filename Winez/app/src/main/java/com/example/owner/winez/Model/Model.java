@@ -99,15 +99,15 @@ public class Model {
         WinezAuth.getInstance().signOut();
     }
 
-    public void setOnSignInListener(WinezAuth.OnSignIn onSignInListener){
-        WinezAuth.getInstance().setOnSignInListener(onSignInListener);
-    }
-
-    public void setOnSignOutListener(WinezAuth.OnSignOut onSignOutListener){
-        WinezAuth.getInstance().setOnSignoffListener(onSignOutListener);
+    public void setOnAuthChangeListener(WinezAuth.OnAuthChangeListener onAuthChangeListener){
+        WinezAuth.getInstance().setOnAuthChangeListener(onAuthChangeListener);
     }
 
     public boolean isAuthenticated() {
         return WinezAuth.getInstance().isAuthenticated();
+    }
+
+    public User getCurrentUser() {
+        return WinezAuth.getInstance().getCurrentUser();
     }
 }

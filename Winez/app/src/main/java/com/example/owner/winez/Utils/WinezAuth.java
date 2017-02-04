@@ -26,8 +26,7 @@ public class WinezAuth {
     private FirebaseAuth mAuth;
     private static WinezAuth _instance;
     private User currentUser;
-    private OnSignIn onSignIn;
-    private OnSignOut onSignOff;
+    private OnAuthChangeListener onAuthChangeListener;
 
     private WinezAuth() {
         this.mAuth = FirebaseAuth.getInstance();
@@ -35,19 +34,19 @@ public class WinezAuth {
 
         if (fireUser != null) {
             getCurrentUser(fireUser);
-        } else {
-            // Listening for auth changes
-            this.mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-                @Override
-                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    final FirebaseUser usr = firebaseAuth.getCurrentUser();
-                    if (usr != null) {
-                        getCurrentUser(usr);
-                    }
-                }
-            });
         }
+        // Listening for auth changes
+        this.mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                final FirebaseUser usr = firebaseAuth.getCurrentUser();
+                if (usr != null) {
+                    getCurrentUser(usr);
+                }
+            }
+        });
     }
+
 
     public static WinezAuth getInstance() {
         if (_instance == null) {
@@ -92,8 +91,8 @@ public class WinezAuth {
                 // Making sure we got the right user
                 if (data != null && data.getUid().compareTo(usr.getUid()) == 0) {
                     currentUser = data;
-                    if (onSignIn != null) {
-                        onSignIn.onResult(currentUser);
+                    if (onAuthChangeListener != null) {
+                        onAuthChangeListener.onLogin(currentUser);
                     }
                 }
             }
@@ -110,26 +109,21 @@ public class WinezAuth {
         return this.mAuth.signInWithEmailAndPassword(email,password);
     }
 
-    public void setOnSignInListener(OnSignIn onAuthChange){
-        this.onSignIn = onAuthChange;
+    public void setOnAuthChangeListener(OnAuthChangeListener onAuthChange){
+        this.onAuthChangeListener = onAuthChange;
     }
 
-    public void setOnSignoffListener(OnSignOut onAuthChange){
-        this.onSignOff = onAuthChange;
-    }
 
     public void signOut(){
         this.mAuth.signOut();
         this.currentUser = null;
-        if (this.onSignOff!= null){
-            this.onSignOff.onResult();
+        if (this.onAuthChangeListener!= null){
+            this.onAuthChangeListener.onLogout();
         }
     }
 
-    public interface OnSignIn{
-        void onResult(User usr);
-    }
-    public interface OnSignOut{
-        void onResult();
+    public interface OnAuthChangeListener{
+        void onLogin(User usr);
+        void onLogout();
     }
 }
