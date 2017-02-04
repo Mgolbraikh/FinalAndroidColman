@@ -2,10 +2,15 @@ package com.example.owner.winez;
 
 
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.test.mock.MockContentProvider;
+import android.view.Display;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -82,6 +87,24 @@ public class WineFragment extends Fragment {
             }
         });
 
+        ((EditText) view.findViewById(R.id.wine_new_comment)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+                if((actionId == EditorInfo.IME_ACTION_DONE) ||
+                        (actionId == EditorInfo.IME_ACTION_NEXT)) {
+                        Model.getInstance().saveComment(new Comment(wine.getUid(),
+                                                                    Model.getInstance().getCurrentUser().getUid(),
+                                                                    textView.getText().toString(),
+                                                                    Model.getInstance().getCurrentUser().getName()));
+
+                    mAdapter.notifyDataSetChanged();
+
+                    return true; // consume.
+                    }
+                return false;
+                }
+        });
+
         return  view;
     }
 
@@ -109,12 +132,13 @@ public class WineFragment extends Fragment {
                 view = LayoutInflater.from(getActivity()).inflate(R.layout.row_comment_list,null);
             }
 
-            Comment currComent = (Comment) this.getItem(i);
-            TextView tvName = (TextView) view.findViewById(R.id.row_comment_name);
-            TextView tvText = (TextView) view.findViewById(R.id.row_comment_text);
+            // Check if this is not the first and the user wishes to enter data
+                Comment currComent = (Comment) this.getItem(i);
+                TextView tvName = (TextView) view.findViewById(R.id.row_comment_name);
+                TextView tvText = (TextView) view.findViewById(R.id.row_comment_text);
 
-            tvName.setText(currComent.getUserName());
-            tvText.setText(currComent.getText());
+                tvName.setText(currComent.getUserName());
+                tvText.setText(currComent.getText());
 
             return view;
         }
