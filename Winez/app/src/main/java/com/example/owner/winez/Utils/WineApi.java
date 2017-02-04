@@ -1,6 +1,5 @@
 package com.example.owner.winez.Utils;
 
-import android.util.JsonReader;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -8,21 +7,15 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.owner.winez.Model.Model;
 import com.example.owner.winez.MyApplication;
-import com.google.firebase.database.FirebaseDatabase;
+import com.example.owner.winez.Utils.ApiClasses.ApiWineClass;
+import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class WineApi {
     public final int RED_WINE = 124;
@@ -50,20 +43,36 @@ public class WineApi {
     }
 
     /**
-     * @param category - the id of the category selected
+     * @param GetOnCompliteResult - Result event
      */
-    public void GetWinesByCategory(int category) {
+    public void GetWinesByCategory(final GetResultOnRespons<ApiWineClass> GetOnCompliteResult ) {
 
         String url = "http://services.wine.com/api/beta2/service.svc/JSON/catalog?sort=(rating|ascending)&size=100&apikey=" + this.apikey;
+        final ArrayList<ApiWineClass> answer = new ArrayList<>();
 
 // Request a string response from the provided URL.
         //StringRequest stringRequest = new StringRequest(
                 JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url,null,
-                new Response.Listener<JSONObject>() {
+
+                        new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Gson gson = new Gson();
                         // Display the first 500 characters of the response string.
                         Log.d("Response:", "onResponse: this worked  +  " + response);
+                        try {
+                            JSONArray productsarray = response.getJSONObject("Products").getJSONArray("List");
+                            for (int index = 0; index < productsarray.length(); index++){
+                                ApiWineClass newWine =  gson.fromJson(productsarray.get(index).toString(),ApiWineClass.class);
+                                newWine.setRating(productsarray.getJSONObject(index).getJSONObject("Ratings").get("HighestScore").toString());
+                                answer.add(newWine);
+                            }
+                            GetOnCompliteResult.onResult(answer);
+
+                        } catch (Exception e)
+                        {
+                            Log.d("Error:", "this is error parsing array = " + e.getMessage() );
+                        }
                     }
                 }, new Response.ErrorListener() {
                             @Override
@@ -73,37 +82,6 @@ public class WineApi {
         });
 
         this.queue.add(jor);
-
-//        try {
-//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//            conn.setRequestMethod("GET");
-//            // conn.
-//            conn.setRequestProperty("Accept", "application/json");
-//
-//            if (conn.getResponseCode() != 200) {
-//                throw new RuntimeException("Failed : HTTP error code : "
-//                        + conn.getResponseCode());
-//            }
-//
-//            BufferedReader br = new BufferedReader(new InputStreamReader(
-//                    (conn.getInputStream())));
-//
-//            String output;
-//            System.out.println("Output from Server .... \n");
-//            while ((output = br.readLine()) != null) {
-//                System.out.println(output);
-//            }
-//
-//            conn.disconnect();
-//
-//        } catch (MalformedURLException e) {
-//
-//            e.printStackTrace();
-//
-//        } catch (IOException e) {
-//
-//            e.printStackTrace();
-//        }
     }
 
     public int getRED_WINE() {
@@ -128,5 +106,10 @@ public class WineApi {
 
     public int getSAKE_WINE() {
         return SAKE_WINE;
+    }
+
+    public interface GetResultOnRespons<T>{
+        public void onResult(ArrayList<T> data);
+        public void onCancel();
     }
 }
