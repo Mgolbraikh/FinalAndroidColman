@@ -1,15 +1,11 @@
 package com.example.owner.winez;
 
 
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,9 +16,7 @@ import android.widget.TextView;
 
 import com.example.owner.winez.Model.Model;
 import com.example.owner.winez.Model.User;
-import com.example.owner.winez.Model.Wine;
 import com.example.owner.winez.Utils.Consts;
-import com.example.owner.winez.Utils.WinezAuth;
 
 import java.util.List;
 
@@ -38,8 +32,8 @@ public class MyWinesListFragment extends Fragment {
         // Required empty public constructor
     }
 
-// TODO : Back button to repair
-    //TODO : Local DB to do
+    // TODO : Back button to repair
+    // TODO : Local DB to do
     // TODO : Comments - everything
 
     @Override
@@ -49,6 +43,7 @@ public class MyWinesListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my_wines_list, container, false);;
         ListView list = (ListView)view.findViewById(R.id.mmywines_list);
         mAdapter = new MyWinesAdapter();
+
         list.setAdapter(mAdapter);
         list.setClickable(true);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
