@@ -3,11 +3,14 @@ package com.example.owner.winez;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.owner.winez.Utils.ApiClasses.WineApiClass;
 import com.example.owner.winez.Utils.WineApi;
@@ -25,6 +28,7 @@ public class AllWinesFragment extends Fragment {
     AllWinesAdapter mAdapter;
 
     public AllWinesFragment() {
+        Log.d("stuf:", "asdjfsadjfklasdjflkasjdf");
      }
 
 
@@ -81,7 +85,11 @@ public class AllWinesFragment extends Fragment {
                 view = LayoutInflater.from(getActivity()).inflate(R.layout.row_all_wine_list,null);
             }
 
-
+            WineApiClass item = (WineApiClass)this.getItem(i);
+            TextView nameText = (TextView) view.findViewById(R.id.row_all_wine_name);
+            nameText.setText( item.getName());
+            TextView typeText = (TextView) view.findViewById(R.id.row_all_wine_type);
+            typeText.setText( item.getType());
 
             return view;
         }
