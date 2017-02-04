@@ -2,6 +2,7 @@ package com.example.owner.winez;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -38,15 +39,14 @@ public class MainActivity extends Activity {
 
     private void showRegistration() {
         RegisterFrag registrationFrag = new RegisterFrag();
-        getFragmentManager().beginTransaction()
-                .replace(R.id.WinezActivityMainView, registrationFrag)
+        getFragmentManager().beginTransaction().add(R.id.WinezActivityMainView, registrationFrag)
                 .addToBackStack(null)
                 .commit();
     }
 
     private void buildTabs() {
         TabControlFragment tabs = new TabControlFragment();
-        getFragmentManager().beginTransaction().replace(R.id.WinezActivityMainView, tabs)
+        getFragmentManager().beginTransaction().add(R.id.WinezActivityMainView, tabs)
                 .addToBackStack(null)
                 .commit();
     }
