@@ -9,7 +9,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.owner.winez.MyApplication;
-import com.example.owner.winez.Utils.ApiClasses.ApiWineClass;
+import com.example.owner.winez.Utils.ApiClasses.WineApiClass;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -45,10 +45,10 @@ public class WineApi {
     /**
      * @param GetOnCompliteResult - Result event
      */
-    public void GetWinesByCategory(final GetResultOnRespons<ApiWineClass> GetOnCompliteResult ) {
+    public void GetWinesByCategory(final GetResultOnRespons<WineApiClass> GetOnCompliteResult ) {
 
         String url = "http://services.wine.com/api/beta2/service.svc/JSON/catalog?sort=(rating|ascending)&size=100&apikey=" + this.apikey;
-        final ArrayList<ApiWineClass> answer = new ArrayList<>();
+        final ArrayList<WineApiClass> answer = new ArrayList<>();
 
 // Request a string response from the provided URL.
         //StringRequest stringRequest = new StringRequest(
@@ -63,7 +63,7 @@ public class WineApi {
                         try {
                             JSONArray productsarray = response.getJSONObject("Products").getJSONArray("List");
                             for (int index = 0; index < productsarray.length(); index++){
-                                ApiWineClass newWine =  gson.fromJson(productsarray.get(index).toString(),ApiWineClass.class);
+                                WineApiClass newWine =  gson.fromJson(productsarray.get(index).toString(),WineApiClass.class);
                                 newWine.setRating(productsarray.getJSONObject(index).getJSONObject("Ratings").get("HighestScore").toString());
                                 answer.add(newWine);
                             }
