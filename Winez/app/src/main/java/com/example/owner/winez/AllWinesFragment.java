@@ -6,6 +6,14 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+
+import com.example.owner.winez.Utils.ApiClasses.WineApiClass;
+import com.example.owner.winez.Utils.WineApi;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -13,17 +21,70 @@ import android.view.ViewGroup;
  */
 public class AllWinesFragment extends Fragment {
 
+    List<WineApiClass> allWines;
+    AllWinesAdapter mAdapter;
 
     public AllWinesFragment() {
-        // Required empty public constructor
-    }
+     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_all_wines, container, false);
+        View view = inflater.inflate(R.layout.fragment_all_wines, container, false);
+        final ListView list = (ListView)view.findViewById(R.id.all_wines_list);
+        mAdapter = new AllWinesAdapter();
+        allWines = new ArrayList<>();
+        WineApi.getInstance().GetWinesByCategory(new WineApi.GetResultOnRespons<WineApiClass>() {
+            @Override
+            public void onResult(ArrayList<WineApiClass> data) {
+                allWines = data;
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
+
+        list.setAdapter(mAdapter);
+        list.setEmptyView(view.findViewById(R.id.all_wines_empty_txt));
+
+        return view;
+    }
+
+    class AllWinesAdapter extends BaseAdapter{
+
+
+
+        @Override
+        public int getCount() {
+            return allWines.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return allWines.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            if(view == null){
+                view = LayoutInflater.from(getActivity()).inflate(R.layout.row_all_wine_list,null);
+            }
+
+
+
+            return view;
+        }
     }
 
 }
