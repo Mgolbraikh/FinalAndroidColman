@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.example.owner.winez.Model.Model;
 import com.example.owner.winez.Model.User;
 import com.example.owner.winez.Model.Wine;
+import com.example.owner.winez.Utils.Consts;
 import com.example.owner.winez.Utils.WinezAuth;
 
 import java.util.List;
@@ -37,7 +38,9 @@ public class MyWinesListFragment extends Fragment {
         // Required empty public constructor
     }
 
-
+// TODO : Back button to repair
+    //TODO : Local DB to do
+    // TODO : Comments - everything
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,7 +50,7 @@ public class MyWinesListFragment extends Fragment {
         ListView list = (ListView)view.findViewById(R.id.mmywines_list);
         mAdapter = new MyWinesAdapter();
         list.setAdapter(mAdapter);
-        list.setEmptyView(view.findViewById(R.id.mywines_empty_txt));
+        list.setClickable(true);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -56,7 +59,7 @@ public class MyWinesListFragment extends Fragment {
                 Fragment wineDetailFrag = new WineFragment();
                 FragmentTransaction ftr  = getActivity().getFragmentManager().beginTransaction();
                 Bundle WineToShow = new Bundle();
-                WineToShow.putInt("WineId", (Integer)view.getTag());
+                WineToShow.putString(Consts.WINE_BUNDLE_ID, (String) view.getTag());
 
                 wineDetailFrag.setArguments(WineToShow);
                 ftr.replace(R.id.WinezActivityMainView, wineDetailFrag);
@@ -65,7 +68,7 @@ public class MyWinesListFragment extends Fragment {
                 ftr.commit();
             }
         });
-
+        list.setEmptyView(view.findViewById(R.id.mywines_empty_txt));
         return view;
 
     }

@@ -13,5 +13,6 @@
         android:layout_height="wrap_content"
         android:src="@drawable/cross"
         android:background="@null"
+        android:focusable="false"
         android:layout_alignParentEnd="true"/>
 </RelativeLayout>
