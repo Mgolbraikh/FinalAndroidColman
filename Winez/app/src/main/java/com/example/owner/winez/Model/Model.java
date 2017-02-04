@@ -115,7 +115,13 @@ public class Model {
 
     public void addWine(WineApiClass wineToAdd)
     {
+        this.mRemoteDB.saveWithId(Wine.class.getSimpleName(), new Wine(wineToAdd));
         this.getCurrentUser().getUserWines().put(wineToAdd.getId(), wineToAdd.getName());
+        this.saveCurrentUser(this.getCurrentUser());
+    }
+
+    public void removeWine(WineApiClass toRemove){
+        this.getCurrentUser().getUserWines().remove(toRemove.getId());
         this.saveCurrentUser(this.getCurrentUser());
     }
 }
