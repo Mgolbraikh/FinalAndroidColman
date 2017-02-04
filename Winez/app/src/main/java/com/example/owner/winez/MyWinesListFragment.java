@@ -53,11 +53,12 @@ public class MyWinesListFragment extends Fragment {
         private User currentUser;
 
         public MyWinesAdapter(){
-            currentUser = WinezAuth.getInstance().getCurrentUser();
+
+            currentUser = Model.getInstance().getCurrentUser();
         }
         @Override
         public int getCount() {
-            return WinezAuth.getInstance().getCurrentUser().getUserWines().size();
+            return currentUser.getUserWines().size();
         }
 
         @Override
