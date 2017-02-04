@@ -61,6 +61,7 @@ public class TabControlFragment extends Fragment {
     @Override
     public void onDestroyView(){
         getActivity().getActionBar().removeAllTabs();
+        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         super.onDestroyView();
     }
     private void buildTabs() {
