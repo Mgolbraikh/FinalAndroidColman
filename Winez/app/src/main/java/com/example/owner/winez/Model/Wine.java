@@ -2,6 +2,8 @@ package com.example.owner.winez.Model;
 
 import com.example.owner.winez.Utils.ApiClasses.WineApiClass;
 
+import java.util.Map;
+
 /**
  * Created by owner on 28-Jan-17.
  */
@@ -73,5 +75,15 @@ public class Wine extends Entity {
         this.vintage = vintage;
     }
 
+    @Override
+    public Map<String,Object> toMap(){
+        Map<String,Object> map = super.toMap();
+        map.put("price",getPrice());
+        map.put("type",getType());
+        map.put("name",getName());
+        map.put("vintage",getVintage());
+        map.put("picture",getPrice());
+        return map;
+    }
 
 }
