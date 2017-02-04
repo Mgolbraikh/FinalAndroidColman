@@ -18,11 +18,11 @@
             android:layout_height="wrap_content"
             android:textSize="22sp" />
 
-        <RatingBar
-            android:id="@+id/wine_is_favorite"
+        <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:numStars="1" />
+            android:id="@+id/wine_is_favorite"
+            android:button="@drawable/stars"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
