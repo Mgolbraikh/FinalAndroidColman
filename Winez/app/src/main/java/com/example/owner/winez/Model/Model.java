@@ -1,8 +1,10 @@
 package com.example.owner.winez.Model;
 
 import com.example.owner.winez.MyApplication;
+import com.example.owner.winez.Utils.ApiClasses.WineApiClass;
 import com.example.owner.winez.Utils.ModelSQL.UserSQL;
 import com.example.owner.winez.Utils.ModelSQL.WineSQL;
+import com.example.owner.winez.Utils.WineApi;
 import com.example.owner.winez.Utils.WinesLocalDB;
 import com.example.owner.winez.Utils.WinezAuth;
 import com.example.owner.winez.Utils.WinezDB;
@@ -109,5 +111,11 @@ public class Model {
 
     public User getCurrentUser() {
         return WinezAuth.getInstance().getCurrentUser();
+    }
+
+    public void addWine(WineApiClass wineToAdd)
+    {
+        this.getCurrentUser().getUserWines().put(wineToAdd.getId(), wineToAdd.getName());
+        this.saveCurrentUser(this.getCurrentUser());
     }
 }

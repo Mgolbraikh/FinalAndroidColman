@@ -10,6 +10,10 @@ public class WineApiClass {
     private String picture;
     private String Type;
     private String Rating;
+    private Double PriceRetail;
+    private String Vintage;
+
+
 
     public WineApiClass(String id, String name) {
         Id = id;
@@ -54,5 +58,21 @@ public class WineApiClass {
 
     public void setType(String type) {
         this.Type = type;
+    }
+
+    public Double getPriceRetail() {
+        return PriceRetail;
+    }
+
+    public void setPriceRetail(Double priceRetail) {
+        PriceRetail = priceRetail;
+    }
+
+    public String getVintage() {
+        return Vintage;
+    }
+
+    public void setVintage(String vintage) {
+        Vintage = vintage;
     }
 }
