@@ -94,4 +94,20 @@ public class Model {
     public Task<AuthResult> authenticate(String email, String password) {
         return WinezAuth.getInstance().authenticate(email,password);
     }
+
+    public void signOut() {
+        WinezAuth.getInstance().signOut();
+    }
+
+    public void setOnSignInListener(WinezAuth.OnSignIn onSignInListener){
+        WinezAuth.getInstance().setOnSignInListener(onSignInListener);
+    }
+
+    public void setOnSignOutListener(WinezAuth.OnSignOut onSignOutListener){
+        WinezAuth.getInstance().setOnSignoffListener(onSignOutListener);
+    }
+
+    public boolean isAuthenticated() {
+        return WinezAuth.getInstance().isAuthenticated();
+    }
 }
