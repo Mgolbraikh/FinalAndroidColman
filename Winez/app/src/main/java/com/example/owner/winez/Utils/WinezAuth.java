@@ -26,7 +26,8 @@ public class WinezAuth {
     private FirebaseAuth mAuth;
     private static WinezAuth _instance;
     private User currentUser;
-    private OnUserGetComplete onUsergetComplete;
+    private OnSignIn onSignIn;
+    private OnSignOut onSignOff;
 
     private WinezAuth() {
         this.mAuth = FirebaseAuth.getInstance();
@@ -74,27 +75,26 @@ public class WinezAuth {
 
     }
 
-    public void addAuthStateListener(FirebaseAuth.AuthStateListener authStateListener) {
-        this.mAuth.addAuthStateListener(authStateListener);
-    }
-
-    public void removeAuthStateListener(FirebaseAuth.AuthStateListener authStateListener) {
-        this.mAuth.removeAuthStateListener(authStateListener);
-    }
-
+    /**
+     * Checks if firebase is authenticated
+     *
+     * @return
+     */
     public boolean isAuthenticated() {
         return this.mAuth.getCurrentUser() != null;
     }
 
     private void getCurrentUser(final FirebaseUser usr) {
         // Getting current user from db
-        WinezDB.getInstance().getSingle(User.class.getSimpleName(), User.class, usr.getUid(), new WinezDB.GetOnCompleteResult<User>(){
+        WinezDB.getInstance().getSingle(User.class.getSimpleName(), User.class, usr.getUid(), new WinezDB.GetOnCompleteResult<User>() {
             @Override
             public void onResult(User data) {
                 // Making sure we got the right user
                 if (data != null && data.getUid().compareTo(usr.getUid()) == 0) {
                     currentUser = data;
-                    onUsergetComplete.onComplete(currentUser);
+                    if (onSignIn != null) {
+                        onSignIn.onResult(currentUser);
+                    }
                 }
             }
 
@@ -106,24 +106,30 @@ public class WinezAuth {
     }
 
 
-    /**
-     * Add listener for end of get user
-     * @param onUserGetComplete
-     */
-    public void setOnUserGetComplete(OnUserGetComplete onUserGetComplete){
-        this.onUsergetComplete = onUserGetComplete;
-
-        // Checks if listener was already activated
-        if(this.currentUser != null){
-            onUserGetComplete.onComplete(this.currentUser);
-        }
-    }
-
     public Task<AuthResult> authenticate(String email, String password) {
         return this.mAuth.signInWithEmailAndPassword(email,password);
     }
 
-    public interface OnUserGetComplete{
-        void onComplete(User user);
+    public void setOnSignInListener(OnSignIn onAuthChange){
+        this.onSignIn = onAuthChange;
+    }
+
+    public void setOnSignoffListener(OnSignOut onAuthChange){
+        this.onSignOff = onAuthChange;
+    }
+
+    public void signOut(){
+        this.mAuth.signOut();
+        this.currentUser = null;
+        if (this.onSignOff!= null){
+            this.onSignOff.onResult();
+        }
+    }
+
+    public interface OnSignIn{
+        void onResult(User usr);
+    }
+    public interface OnSignOut{
+        void onResult();
     }
 }

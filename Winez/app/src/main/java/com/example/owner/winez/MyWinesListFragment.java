@@ -4,6 +4,8 @@ package com.example.owner.winez;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -30,6 +32,7 @@ public class MyWinesListFragment extends Fragment {
     }
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,6 +45,10 @@ public class MyWinesListFragment extends Fragment {
         return view;
 
     }
+
+
+
+
     class MyWinesAdapter extends BaseAdapter{
         private User currentUser;
 
@@ -66,7 +73,7 @@ public class MyWinesListFragment extends Fragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            if (view == null){
+            if (view == null) {
                 view = LayoutInflater.from(getActivity()).inflate(R.layout.row_my_wines_list, null);
                 ImageView removeImage = (ImageView) view.findViewById(R.id.mywines_remove_image);
                 removeImage.setOnClickListener(new View.OnClickListener() {
