@@ -4,14 +4,14 @@ package com.example.owner.winez.Utils.ApiClasses;
  * Created by owner on 04-Feb-17.
  */
 
-public class ApiWineClass {
+public class WineApiClass {
     private String Id;
     private String Name;
     private String picture;
     private String Type;
     private String Rating;
 
-    public ApiWineClass(String id, String name) {
+    public WineApiClass(String id, String name) {
         Id = id;
         Name = name;
     }
