@@ -1,5 +1,7 @@
 package com.example.owner.winez.Model;
 
+import com.example.owner.winez.Utils.ApiClasses.WineApiClass;
+
 /**
  * Created by owner on 28-Jan-17.
  */
@@ -8,6 +10,14 @@ public class Wine extends Entity {
 
     public Wine(String name) {
         this.name = name;
+    }
+
+    public Wine(WineApiClass fromWine){
+        this.setName(fromWine.getName());
+        this.setPrice(fromWine.getPriceRetail());
+        this.setType(fromWine.getType());
+        this.setUid(fromWine.getId());
+        this.setVintage(fromWine.getVintage());
     }
 
     public Wine(){
@@ -34,5 +44,34 @@ public class Wine extends Entity {
     }
 
     private String name;
+    private double price;
+    private String type;
+    private String vintage;
     private  String picture;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getVintage() {
+        return vintage;
+    }
+
+    public void setVintage(String vintage) {
+        this.vintage = vintage;
+    }
+
+
 }
