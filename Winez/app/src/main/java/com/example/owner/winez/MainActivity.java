@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
         Model.getInstance().setOnAuthChangeListener(new WinezAuth.OnAuthChangeListener() {
             @Override
             public void onLogin(User usr) {
+
                 buildTabs();
             }
 

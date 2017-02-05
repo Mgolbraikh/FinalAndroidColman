@@ -32,9 +32,6 @@ public class WinezAuth {
         this.mAuth = FirebaseAuth.getInstance();
         FirebaseUser fireUser = this.mAuth.getCurrentUser();
 
-        if (fireUser != null) {
-            getCurrentUser(fireUser);
-        }
         // Listening for auth changes
         this.mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
