@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ public class WineFragment extends Fragment {
     
     // // TODO: 04-Feb-17 need to add the comment to wines and save and load from db
     // TODO: 04-Feb-17 need to add STAR and all its attributes
+    // TODO: Add back to home button (not backpress but the back on top)
 
 
     @Override
@@ -78,6 +80,11 @@ public class WineFragment extends Fragment {
                 edType.setText(wine.getType());
                 EditText edYear = (EditText) view.findViewById(R.id.wine_vintage_year);
                 edYear.setText(wine.getVintage());
+                ((CheckBox)view.findViewById(R.id.wine_is_favorite))
+                        .setChecked(Model.getInstance()
+                                .getCurrentUser()
+                                .getUserWines()
+                                .containsKey(data.getUid()));
 
             }
 

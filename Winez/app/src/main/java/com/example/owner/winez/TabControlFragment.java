@@ -76,7 +76,7 @@ public class TabControlFragment extends Fragment {
         if (bar.getTabCount() == 0) {
             final MyWinesListFragment myWines = new MyWinesListFragment();
             final AllWinesFragment allWines = new AllWinesFragment();
-            bar.addTab(bar.newTab().setText("My Wines").setTabListener(new ActionBar.TabListener() {
+            ActionBar.Tab myWinesTab = bar.newTab().setText("My Wines").setTabListener(new ActionBar.TabListener() {
                 @Override
                 public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
                     fragmentTransaction.add(R.id.tabs_maineview, myWines);
@@ -91,7 +91,8 @@ public class TabControlFragment extends Fragment {
                 public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
                 }
-            }));
+            });
+            bar.addTab(myWinesTab);
 
             bar.addTab(bar.newTab().setText("All Wines").setTabListener(new ActionBar.TabListener() {
                 @Override
@@ -108,7 +109,8 @@ public class TabControlFragment extends Fragment {
                 public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
                 }
-            }));
+            }),false);
+
         }
     }
 }

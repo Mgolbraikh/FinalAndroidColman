@@ -4,14 +4,11 @@ package com.example.owner.winez;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -105,9 +102,7 @@ public class AllWinesFragment extends Fragment {
 
             WineApiClass item = (WineApiClass)this.getItem(i);
             TextView nameText = (TextView) view.findViewById(R.id.row_all_wine_name);
-            nameText.setText( item.getName());
-            TextView typeText = (TextView) view.findViewById(R.id.row_all_wine_type);
-            typeText.setText( item.getType());
+            nameText.setText( item.getName() + " - " + item.getType());
             CheckBox cb = (CheckBox)view.findViewById(R.id.all_wine_favorite);
             cb.setChecked(Model.getInstance().getCurrentUser().getUserWines().containsKey(item.getId()));
             view.setTag(i);
