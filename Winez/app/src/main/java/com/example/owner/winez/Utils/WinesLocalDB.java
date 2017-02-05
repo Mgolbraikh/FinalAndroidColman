@@ -41,7 +41,7 @@ public class WinesLocalDB {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            // TODO : Michael - complite here all operations on table
+            // TODO : Michael - complete here all operations on table
             //StudentSql.drop(db);
             //LastUpdateSql.drop(db);
             onCreate(db);

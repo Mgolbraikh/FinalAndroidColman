@@ -133,11 +133,11 @@ public class WinezDB {
         DatabaseReference ref = this.getCollection(entityName).child(parentId).push();
         String key = ref.getKey();
         toSave.setUid(key);
-        ref.setValue(key,toSave.toMap());
+        ref.setValue(toSave.toMap());
     }
     public interface GetOnCompleteResult<T>{
-        public void onResult(T data);
-        public void onCancel(String err);
+        void onResult(T data);
+        void onCancel(String err);
     }
 
     /**

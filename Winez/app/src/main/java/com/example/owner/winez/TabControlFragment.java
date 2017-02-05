@@ -60,49 +60,55 @@ public class TabControlFragment extends Fragment {
 
     @Override
     public void onDestroyView(){
-        getActivity().getActionBar().removeAllTabs();
-        getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        // Checking before destroying
+        if (!getActivity().isDestroyed()) {
+            getActivity().getActionBar().removeAllTabs();
+            getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        }
         super.onDestroyView();
     }
     private void buildTabs() {
         ActionBar bar = getActivity().getActionBar();
 
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        final MyWinesListFragment myWines = new MyWinesListFragment();
-        final AllWinesFragment allWines = new AllWinesFragment();
-        bar.addTab(bar.newTab().setText("My Wines").setTabListener(new ActionBar.TabListener() {
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-                fragmentTransaction.add(R.id.tabs_maineview, myWines);
-            }
 
-            @Override
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-                fragmentTransaction.remove(myWines);
-            }
+        // Checking if tabs already created
+        if (bar.getTabCount() == 0) {
+            final MyWinesListFragment myWines = new MyWinesListFragment();
+            final AllWinesFragment allWines = new AllWinesFragment();
+            bar.addTab(bar.newTab().setText("My Wines").setTabListener(new ActionBar.TabListener() {
+                @Override
+                public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+                    fragmentTransaction.add(R.id.tabs_maineview, myWines);
+                }
 
-            @Override
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+                @Override
+                public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+                    fragmentTransaction.remove(myWines);
+                }
 
-            }
-        }));
+                @Override
+                public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
-        bar.addTab(bar.newTab().setText("All Wines").setTabListener(new ActionBar.TabListener() {
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-                fragmentTransaction.add(R.id.tabs_maineview, allWines);
-            }
+                }
+            }));
 
-            @Override
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-                fragmentTransaction.remove(allWines);
-            }
+            bar.addTab(bar.newTab().setText("All Wines").setTabListener(new ActionBar.TabListener() {
+                @Override
+                public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+                    fragmentTransaction.add(R.id.tabs_maineview, allWines);
+                }
 
-            @Override
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+                @Override
+                public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+                    fragmentTransaction.remove(allWines);
+                }
 
-            }
-        }));
+                @Override
+                public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+                }
+            }));
+        }
     }
-
 }

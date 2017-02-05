@@ -66,7 +66,8 @@ public class MainActivity extends Activity {
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0 &&
-                fm.findFragmentById(R.id.WinezActivityMainView) instanceof RegisterFrag) {
+                (fm.findFragmentById(R.id.WinezActivityMainView) instanceof RegisterFrag ||
+                 fm.findFragmentById(R.id.WinezActivityMainView) instanceof TabControlFragment)) {
             this.finish();
         } else {
             Log.i("MainActivity", "nothing on backstack, calling super");
