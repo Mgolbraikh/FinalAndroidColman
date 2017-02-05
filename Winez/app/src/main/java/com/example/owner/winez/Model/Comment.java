@@ -59,4 +59,14 @@ public class Comment extends Entity {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+    @Override
+    public Map<String,Object> toMap(){
+        Map<String,Object> toRet = super.toMap();
+        toRet.put("userID", this.getUserID());
+        toRet.put("wineID",this.getWineID());
+        toRet.put("text", this.getText());
+        toRet.put("userName", this.getUserName());
+        return toRet;
+    }
 }

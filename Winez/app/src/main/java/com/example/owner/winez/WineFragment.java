@@ -92,11 +92,17 @@ public class WineFragment extends Fragment {
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
                 if((actionId == EditorInfo.IME_ACTION_DONE) ||
                         (actionId == EditorInfo.IME_ACTION_NEXT)) {
-                        Model.getInstance().saveComment(new Comment(wine.getUid(),
-                                                                    Model.getInstance().getCurrentUser().getUid(),
-                                                                    textView.getText().toString(),
-                                                                    Model.getInstance().getCurrentUser().getName()));
 
+                    // Creatin comment
+                    Comment toAdd = new Comment(wine.getUid(),
+                            Model.getInstance().getCurrentUser().getUid(),
+                            textView.getText().toString(),
+                            Model.getInstance().getCurrentUser().getName());
+                    // Saving to remote
+                    Model.getInstance().saveComment(toAdd);
+
+                    // Adding to list
+                    comments.add(toAdd);
                     mAdapter.notifyDataSetChanged();
 
                     return true; // consume.

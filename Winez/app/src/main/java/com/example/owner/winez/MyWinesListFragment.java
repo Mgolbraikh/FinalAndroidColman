@@ -32,7 +32,6 @@ public class MyWinesListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO : Back button to repair
     // TODO : Local DB to do
     // TODO : Comments - everything
 
@@ -68,6 +67,17 @@ public class MyWinesListFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.d("MyWine", "Resume");
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.d("MyWine", "pause");
+    }
     class MyWinesAdapter extends BaseAdapter{
         private User currentUser;
 
