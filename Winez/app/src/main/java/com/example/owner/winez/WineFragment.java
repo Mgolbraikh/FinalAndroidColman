@@ -2,12 +2,16 @@ package com.example.owner.winez;
 
 
 import android.app.Fragment;
-import android.content.SharedPreferences;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.test.mock.MockContentProvider;
-import android.view.Display;
+import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -16,15 +20,19 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.owner.winez.Model.Comment;
 import com.example.owner.winez.Model.Model;
 import com.example.owner.winez.Model.Wine;
 import com.example.owner.winez.Utils.Consts;
 import com.example.owner.winez.Utils.WinezDB;
+import com.example.owner.winez.Utils.WinezStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -34,7 +42,7 @@ public class WineFragment extends Fragment {
     Wine wine;
     List<Comment> comments;
     CommentsAdapter mAdapter;
-
+    static final int REQUEST_IMAGE_CAPTURE = 1;
     public WineFragment() {
         // Required empty public constructor
     }
@@ -42,6 +50,7 @@ public class WineFragment extends Fragment {
     // // TODO: 04-Feb-17 need to add the comment to wines and save and load from db
     // TODO: 04-Feb-17 need to add STAR and all its attributes
     // TODO: Add back to home button (not backpress but the back on top)
+    // TODO fix keyboard hiding text
 
 
     @Override
@@ -49,6 +58,7 @@ public class WineFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         Bundle WineIdBundle = getArguments();
+        setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         final View view = inflater.inflate (R.layout.fragment_wine, container, false);
         final ListView commentsList = (ListView)view.findViewById(R.id.wine_comment_list);
@@ -111,7 +121,7 @@ public class WineFragment extends Fragment {
                     // Adding to list
                     comments.add(toAdd);
                     mAdapter.notifyDataSetChanged();
-
+                    textView.setText("");
                     return true; // consume.
                     }
                 return false;
@@ -121,7 +131,61 @@ public class WineFragment extends Fragment {
         return  view;
     }
 
-    
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.uppermenu, menu);
+        menu.findItem(R.id.menu_add_picture);
+        menu.findItem(R.id.menu_signout).setVisible(true);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.menu_signout:
+            {
+                Model.getInstance().signOut();
+
+                break;
+            }
+            case R.id.menu_add_picture:{
+                addPicture();
+                break;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void addPicture(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            // TODO Add image view
+            Bundle extras = data.getExtras();
+            Bitmap image = (Bitmap) extras.get("data");
+
+            Model.getInstance().saveImage(image,wine.getUid() + ".jpg", new WinezStorage.OnSaveCompleteListener(){
+
+                @Override
+                public void failed() {
+                    Toast.makeText(getActivity(),"Save failed",Toast.LENGTH_LONG);
+                }
+
+                @Override
+                public void done() {
+                    Toast.makeText(getActivity(),"Save complete",Toast.LENGTH_LONG);
+                }
+            });
+        }
+    }
     class CommentsAdapter extends BaseAdapter{
         @Override
         public int getCount() {
