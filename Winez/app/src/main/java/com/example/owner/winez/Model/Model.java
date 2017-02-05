@@ -1,5 +1,9 @@
 package com.example.owner.winez.Model;
 
+import android.graphics.Bitmap;
+import android.support.v4.content.ContextCompat;
+
+import com.example.owner.winez.Manifest;
 import com.example.owner.winez.MyApplication;
 import com.example.owner.winez.Utils.ApiClasses.WineApiClass;
 import com.example.owner.winez.Utils.ModelSQL.UserSQL;
@@ -8,6 +12,7 @@ import com.example.owner.winez.Utils.WineApi;
 import com.example.owner.winez.Utils.WinesLocalDB;
 import com.example.owner.winez.Utils.WinezAuth;
 import com.example.owner.winez.Utils.WinezDB;
+import com.example.owner.winez.Utils.WinezStorage;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
@@ -61,36 +66,10 @@ public class Model {
     public Task<Void> saveCurrentUser(User toSave){
         return this.mRemoteDB.saveWithId(User.class.getSimpleName(),toSave);
     }
-    /**
-     * Get all users from the remote DB
-     * @param getOnCompleteResults
-     */
-    public void getAllUsersAsynch(final WinezDB.GetOnCompleteResults<User> getOnCompleteResults){
-        //1. get the last update date
-        final double lastUpdateDate = UserSQL.getLastUpdateDate(modelLocalSql.getReadbleDB());
 
-        //2. get all records that where updated since last update date
-        //modelRemoteSql.getAll(User.class.getSimpleName(), User.class, lastUpdateDate, getOnCompleteResults);
-
-        //modelRemoteSql.getCollection()
-    }
 
     public void saveComment(Comment cmt){
         this.mRemoteDB.saveChildWithoutId(Comment.class.getSimpleName(), cmt.getWineID(), cmt);
-    }
-
-    /**
-     * Get all Wines from the remote DB
-     * @param getOnCompleteResults
-     */
-    public void getAllWinesAsynch(final WinezDB.GetOnCompleteResults<Wine> getOnCompleteResults){
-        //1. get the last update date
-         final double lastUpdateDate = WineSQL.getLastUpdateDate(modelLocalSql.getReadbleDB());
-
-        //2. get all records that where updated since last update date
-        //modelRemoteSql.getAll(Wine.class.getSimpleName(), Wine.class, lastUpdateDate, getOnCompleteResults);
-
-        //modelRemoteSql.getCollection()
     }
 
     public Task<AuthResult> authenticate(String email, String password) {
@@ -123,5 +102,9 @@ public class Model {
     public void removeWine(WineApiClass toRemove){
         this.getCurrentUser().getUserWines().remove(toRemove.getId());
         this.saveCurrentUser(this.getCurrentUser());
+    }
+
+    public void saveImage(Bitmap image, String url, WinezStorage.OnSaveCompleteListener onSaveCompleteListener) {
+        WinezStorage.getInstance().saveImage(image,url,onSaveCompleteListener);
     }
 }
