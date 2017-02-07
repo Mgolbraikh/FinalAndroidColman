@@ -17,9 +17,6 @@ public class User extends Entity {
 
     public User(){
         this.userWines = new HashMap<>();
-
-        // Put timestemp of the entity
-        //userWines.put("lastUpdated", ServerValue.TIMESTAMP);
     }
 
     @Override

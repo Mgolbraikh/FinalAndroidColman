@@ -97,7 +97,7 @@ public class RegisterFrag extends Fragment {
                                                         Toast.makeText(getActivity(),
                                                                 "Successful registration!",
                                                                 Toast.LENGTH_SHORT).show();
-                                                        getActivity().getFragmentManager().popBackStack();
+                                                        getActivity().getFragmentManager().beginTransaction().remove(RegisterFrag.this).commit();
                                                     }
                                                 });
                                     }

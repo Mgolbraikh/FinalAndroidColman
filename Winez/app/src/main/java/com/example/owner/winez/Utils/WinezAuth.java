@@ -80,13 +80,17 @@ public class WinezAuth {
         return this.mAuth.getCurrentUser() != null;
     }
 
+    public void fetchUser(){
+        this.mAuth = FirebaseAuth.getInstance();
+        this.getCurrentUser(mAuth.getCurrentUser());
+    }
     private void getCurrentUser(final FirebaseUser usr) {
         // Getting current user from db
         WinezDB.getInstance().getSingle(User.class.getSimpleName(), User.class, usr.getUid(), new WinezDB.GetOnCompleteResult<User>() {
             @Override
             public void onResult(User data) {
                 // Making sure we got the right user
-                if (data != null && data.getUid().compareTo(usr.getUid()) == 0) {
+                if (data != null && (currentUser == null || currentUser.getUid().compareTo(data.getUid()) != 0)) {
                     currentUser = data;
                     if (onAuthChangeListener != null) {
                         onAuthChangeListener.onLogin(currentUser);

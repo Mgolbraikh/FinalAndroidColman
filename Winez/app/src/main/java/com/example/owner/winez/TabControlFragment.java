@@ -41,6 +41,7 @@ public class TabControlFragment extends Fragment {
         menu.clear();
         inflater.inflate(R.menu.uppermenu, menu);
         menu.findItem(R.id.menu_signout).setVisible(true);
+        menu.findItem(R.id.menu_add_picture).setVisible(false);
         super.onCreateOptionsMenu(menu,inflater);
     }
     @Override

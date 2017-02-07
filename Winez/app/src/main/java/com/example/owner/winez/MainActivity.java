@@ -18,24 +18,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    Log.d("Main","create");
 
-        // Setting event for after authentication is complete
-        Model.getInstance().setOnAuthChangeListener(new WinezAuth.OnAuthChangeListener() {
-            @Override
-            public void onLogin(User usr) {
-
-                buildTabs();
-            }
-
-            @Override
-            public void onLogout() {
-                getFragmentManager().popBackStack();
-                showRegistration();
-            }
-        });
-        if (!Model.getInstance().isAuthenticated()) {
-            showRegistration();
-        }
     }
 
     private void showRegistration() {
@@ -46,10 +30,11 @@ public class MainActivity extends Activity {
     }
 
     private void buildTabs() {
-        TabControlFragment tabs = new TabControlFragment();
-        getFragmentManager().beginTransaction().add(R.id.WinezActivityMainView, tabs)
-                .addToBackStack(null)
-                .commit();
+        FragmentManager fm = getFragmentManager();
+            TabControlFragment tabs = new TabControlFragment();
+            fm.beginTransaction().add(R.id.WinezActivityMainView, tabs)
+                    .addToBackStack(null)
+                    .commit();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -69,10 +54,45 @@ public class MainActivity extends Activity {
         if (fm.getBackStackEntryCount() > 0 &&
                 (fm.findFragmentById(R.id.WinezActivityMainView) instanceof RegisterFrag ||
                  fm.findFragmentById(R.id.WinezActivityMainView) instanceof TabControlFragment)) {
+            getFragmentManager().popBackStack();
             this.finish();
         } else {
             Log.i("MainActivity", "nothing on backstack, calling super");
+
             super.onBackPressed();
         }
     }
+
+    @Override
+    public void onResume(){
+
+        if (getFragmentManager().getBackStackEntryCount() ==0) {
+            if (!Model.getInstance().isAuthenticated()) {
+                showRegistration();
+            } else if (Model.getInstance().getCurrentUser() != null) {
+                buildTabs();
+            }
+
+            // Setting event for after authentication is complete
+            Model.getInstance().setOnAuthChangeListener(new WinezAuth.OnAuthChangeListener() {
+                @Override
+                public void onLogin(User usr) {
+                    FragmentManager fm = getFragmentManager();
+
+                    buildTabs();
+                }
+
+                @Override
+                public void onLogout() {
+                    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    showRegistration();
+                }
+            });
+        }
+        super.onResume();
+        Log.d("Main","resume");
+    }
+
+
+
 }

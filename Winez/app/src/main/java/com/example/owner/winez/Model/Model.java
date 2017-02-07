@@ -107,4 +107,8 @@ public class Model {
     public void saveImage(Bitmap image, String url, WinezStorage.OnSaveCompleteListener onSaveCompleteListener) {
         WinezStorage.getInstance().saveImage(image,url,onSaveCompleteListener);
     }
+
+    public void getDBUser() {
+        WinezAuth.getInstance().fetchUser();
+    }
 }
