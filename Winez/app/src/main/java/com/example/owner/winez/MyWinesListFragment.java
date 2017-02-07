@@ -19,7 +19,11 @@ import com.example.owner.winez.Model.Model;
 import com.example.owner.winez.Model.User;
 import com.example.owner.winez.Utils.Consts;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -28,7 +32,6 @@ import java.util.List;
 public class MyWinesListFragment extends Fragment {
 
     private MyWinesAdapter mAdapter;
-
     public MyWinesListFragment() {
         // Required empty public constructor
     }
@@ -40,7 +43,7 @@ public class MyWinesListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_my_wines_list, container, false);;
+        View view = inflater.inflate(R.layout.fragment_my_wines_list, container, false);
         ListView list = (ListView)view.findViewById(R.id.mmywines_list);
         mAdapter = new MyWinesAdapter();
         list.setEmptyView(view.findViewById(R.id.mywines_empty_txt));
@@ -63,16 +66,8 @@ public class MyWinesListFragment extends Fragment {
             }
         });
         list.setAdapter(mAdapter);
-
         return view;
 
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        mAdapter.notifyDataSetChanged();
-        Log.d("MyWine", "resume");
     }
 
     @Override
@@ -81,20 +76,20 @@ public class MyWinesListFragment extends Fragment {
         Log.d("MyWine", "pause");
     }
     class MyWinesAdapter extends BaseAdapter{
-        private User currentUser(){
-            return Model.getInstance().getCurrentUser();
-        }
 
+        public Map<String,String> myWines(){
+            return Model.getInstance().getCurrentUser().getUserWines();
+        }
         public MyWinesAdapter(){
         }
         @Override
         public int getCount() {
-            return currentUser().getUserWines().size();
+            return myWines().size();
         }
 
         @Override
         public Object getItem(int i) {
-            return currentUser().getUserWines().keySet().toArray()[i];
+            return myWines().keySet().toArray()[i];
 
         }
 
@@ -105,21 +100,22 @@ public class MyWinesListFragment extends Fragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
+            final User currentUser = Model.getInstance().getCurrentUser();
             if (view == null) {
                 view = LayoutInflater.from(getActivity()).inflate(R.layout.row_my_wines_list, null);
                 ImageView removeImage = (ImageView) view.findViewById(R.id.mywines_remove_image);
                 removeImage.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        currentUser().getUserWines().remove(((View)view.getParent()).getTag());
+                    public void onClick(final View view) {
+                        myWines().remove(((View)view.getParent()).getTag());
                         notifyDataSetChanged();
-                        Model.getInstance().saveCurrentUser(currentUser());
+                        Model.getInstance().saveCurrentUser(currentUser);
                     }
                 });
             }
-            Object item = this.getItem(i);
+            String item = (String)this.getItem(i);
             TextView text = (TextView) view.findViewById(R.id.mywines_row_text);
-            text.setText(currentUser().getUserWines().get(item));
+            text.setText(myWines().get(item));
             view.setTag(item);
             return view;
         }
