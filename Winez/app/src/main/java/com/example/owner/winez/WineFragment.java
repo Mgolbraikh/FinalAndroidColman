@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +21,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,15 +46,14 @@ public class WineFragment extends Fragment {
     Wine wine;
     List<Comment> comments;
     CommentsAdapter mAdapter;
+    ImageView  wineImage;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     public WineFragment() {
         // Required empty public constructor
     }
     
     // // TODO: 04-Feb-17 need to add the comment to wines and save and load from db
-    // TODO: 04-Feb-17 need to add STAR and all its attributes
     // TODO: Add back to home button (not backpress but the back on top)
-    // TODO fix keyboard hiding text
 
 
     @Override
@@ -92,6 +94,23 @@ public class WineFragment extends Fragment {
                 EditText edYear = (EditText) view.findViewById(R.id.wine_vintage_year);
                 edYear.setText(wine.getVintage());
                 CheckBox star = ((CheckBox)view.findViewById(R.id.wine_is_favorite));
+                wineImage = (ImageView)view.findViewById(R.id.wine_image);
+
+                // Gets wine image if there is one
+                if (wine.getPicture() != null) {
+                    Model.getInstance().getImage(wine.getPicture(), new WinezStorage.OnGetBitmapListener() {
+                        @Override
+                        public void onResult(Bitmap image) {
+                            wineImage.setImageBitmap(image);
+                        }
+
+                        @Override
+                        public void onCancelled() {
+
+                        }
+                    });
+                }
+                // Checking checkbox if needed
                 star.setChecked(Model.getInstance()
                     .getCurrentUser()
                     .getUserWines()
@@ -186,11 +205,11 @@ public class WineFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            // TODO Add image view
             Bundle extras = data.getExtras();
-            Bitmap image = (Bitmap) extras.get("data");
+            final Bitmap image = (Bitmap) extras.get("data");
 
-            Model.getInstance().saveImage(image,wine.getUid() + ".jpg", new WinezStorage.OnSaveCompleteListener(){
+            final String imgUrl =  wine.getUid() + ".jpg";
+            Model.getInstance().saveImage(image,imgUrl, new WinezStorage.OnSaveCompleteListener(){
 
                 @Override
                 public void failed() {
@@ -200,6 +219,9 @@ public class WineFragment extends Fragment {
                 @Override
                 public void done() {
                     Toast.makeText(getActivity(),"Save complete",Toast.LENGTH_LONG);
+                    wine.setPicture(imgUrl);
+                    Model.getInstance().saveWine(wine);
+                    wineImage.setImageBitmap(image);
                 }
             });
         }
