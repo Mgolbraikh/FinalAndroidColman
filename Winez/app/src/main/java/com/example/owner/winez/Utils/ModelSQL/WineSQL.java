@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class WineSQL {
 
-    final static String WINE = "users";
+    final static String WINE = "wines";
     final static String WINE_TABLE_ID = "_id";
     final static String WINE_TABLE_NAME = "name";
     final static String WINE_TABLE_PICTURE = "picture";

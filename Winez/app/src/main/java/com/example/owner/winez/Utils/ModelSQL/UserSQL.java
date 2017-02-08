@@ -54,10 +54,10 @@ public class UserSQL {
     }
 
     @Nullable
-    public static User getUserById(SQLiteDatabase db, String id) {
-        String where = USER_TABLE_ID + " = ?";
-        String[] args = {id};
-        Cursor cursor = db.query(USER_TABLE, null, where, args, null, null, null);
+    public static User getUser(SQLiteDatabase db, String id) {
+        //String where = USER_TABLE_ID + " = ?";
+        //String[] args = {id};
+        Cursor cursor = db.query(USER_TABLE, null, null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             int idIndex = cursor.getColumnIndex(USER_TABLE_ID);

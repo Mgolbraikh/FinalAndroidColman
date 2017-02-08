@@ -57,10 +57,17 @@ public class Model {
     public Task<Void> saveCurrentUser(User toSave){
         // Save to local - save user and his wines
         //final double lastUpdateDate = UserSQL.getLastUpdateDate(this.modelLocalSql.getReadbleDB());
-        UserSQL.add(this.modelLocalSql.getReadbleDB(),toSave);
-        WineSQL.add(this.modelLocalSql.getReadbleDB(),toSave.getUserWines());
-
+        saveCurrentUserLocal(toSave);
         return this.mRemoteDB.saveWithId(User.class.getSimpleName(),toSave);
+    }
+
+    public void saveCurrentUserLocal(User toSave){
+        // Save to local - save user and his wines
+        //final double lastUpdateDate = UserSQL.getLastUpdateDate(this.modelLocalSql.getReadbleDB());
+        UserSQL.add(this.modelLocalSql.getReadbleDB(),toSave);
+        WineSQL.drop(this.modelLocalSql.getReadbleDB());
+        WineSQL.create(this.modelLocalSql.getReadbleDB());
+        WineSQL.add(this.modelLocalSql.getReadbleDB(),toSave.getUserWines());
     }
 
 
