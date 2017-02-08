@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
 
 import com.example.owner.winez.Model.User;
-import com.example.owner.winez.Utils.LastUpdateSql;
 
 import java.util.LinkedList;
 import java.util.List;

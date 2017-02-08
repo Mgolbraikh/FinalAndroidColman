@@ -33,6 +33,28 @@ public class MainActivity extends Activity {
                     REQUEST_WRITE_STORAGE);
         }
 
+        if (!Model.getInstance().isAuthenticated()) {
+            showRegistration();
+        } else if (Model.getInstance().getCurrentUser() != null) {
+            buildTabs();
+        }
+
+        // Setting event for after authentication is complete
+        Model.getInstance().setOnAuthChangeListener(new WinezAuth.OnAuthChangeListener() {
+            @Override
+            public void onLogin(User usr) {
+                //Save remote user to local db
+                Model.getInstance().saveCurrentUserLocal(usr);
+                buildTabs();
+            }
+
+            @Override
+            public void onLogout() {
+                getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                showRegistration();
+            }
+        });
+
     }
 
     private void showRegistration() {
@@ -83,29 +105,6 @@ public class MainActivity extends Activity {
     public void onResume(){
         super.onResume();
         Log.d("Main","resume");
-        if (getFragmentManager().getBackStackEntryCount() ==0) {
-            if (!Model.getInstance().isAuthenticated()) {
-                showRegistration();
-            } else if (Model.getInstance().getCurrentUser() != null) {
-                buildTabs();
-            }
-
-            // Setting event for after authentication is complete
-            Model.getInstance().setOnAuthChangeListener(new WinezAuth.OnAuthChangeListener() {
-                @Override
-                public void onLogin(User usr) {
-                    //Save remote user to local db
-             //       Model.getInstance().saveCurrentUserLocal(usr);
-                    buildTabs();
-                }
-
-                @Override
-                public void onLogout() {
-                    getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    showRegistration();
-                }
-            });
-        }
 
     }
 

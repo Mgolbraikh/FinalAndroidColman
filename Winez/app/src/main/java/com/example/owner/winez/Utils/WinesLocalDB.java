@@ -38,14 +38,12 @@ public class WinesLocalDB {
         public void onCreate(SQLiteDatabase db) {
             UserSQL.getInstance().create(db);
             WineSQL.getInstance().create(db);
-            LastUpdateSql.create(db);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             // TODO : Michael - complete here all operations on table
             //StudentSql.drop(db);
-            //LastUpdateSql.drop(db);
             onCreate(db);
         }
     }
