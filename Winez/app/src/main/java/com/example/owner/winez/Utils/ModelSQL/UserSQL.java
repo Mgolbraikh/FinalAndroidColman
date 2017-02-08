@@ -34,6 +34,10 @@ public class UserSQL {
         db.execSQL("drop table " + USER_TABLE + ";");
     }
 
+    public static void DeleteAll(SQLiteDatabase db) {
+        db.execSQL("delete from  " + USER_TABLE + ";");
+    }
+
     public static List<User> getAllStudents(SQLiteDatabase db) {
         Cursor cursor = db.query(USER_TABLE, null, null , null, null, null, null);
         List<User> users = new LinkedList<User>();
