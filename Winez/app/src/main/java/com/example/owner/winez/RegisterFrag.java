@@ -70,40 +70,50 @@ public class RegisterFrag extends Fragment {
 
             // Disabling button
             enter.setEnabled(false);
-            WinezAuth.getInstance().
-                    registerUser(email.getText().toString(),
-                            password.getText().toString(),
-                            getActivity(),
-                            new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                    // Checking if add was successful
-                                    if (!task.isSuccessful()) {
-                                        Toast.makeText(getActivity(),
-                                                "Registration failed",
-                                                Toast.LENGTH_SHORT).show();
-                                        enter.setEnabled(true);
-                                    } else {
-                                        // Adding user to db
-                                        User usrToAdd =
-                                                new User(username.getText().toString(),
-                                                        email.getText().toString(),
-                                                        task.getResult().getUser().getUid());
-                                        Model.getInstance().saveCurrentUser(usrToAdd).addOnCompleteListener(getActivity(),
-                                                new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        Toast.makeText(getActivity(),
-                                                                "Successful registration!",
-                                                                Toast.LENGTH_SHORT).show();
-                                                        getActivity().getFragmentManager().beginTransaction().remove(RegisterFrag.this).commit();
-                                                    }
-                                                });
+            // Validating fields
+            if (enter.getText().length() == 0 ||
+                password.getText().length() == 0 ||
+                username.getText().length() ==0){
+                Toast.makeText(getActivity(),
+                        "Registration failed",
+                        Toast.LENGTH_SHORT).show();
+                enter.setEnabled(true);
+            } else {
+                WinezAuth.getInstance().
+                        registerUser(email.getText().toString(),
+                                password.getText().toString(),
+                                getActivity(),
+                                new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                        // Checking if add was successful
+                                        if (!task.isSuccessful()) {
+                                            Toast.makeText(getActivity(),
+                                                    "Registration failed",
+                                                    Toast.LENGTH_SHORT).show();
+                                            enter.setEnabled(true);
+                                        } else {
+                                            // Adding user to db
+                                            User usrToAdd =
+                                                    new User(username.getText().toString(),
+                                                            email.getText().toString(),
+                                                            task.getResult().getUser().getUid());
+                                            Model.getInstance().saveCurrentUser(usrToAdd).addOnCompleteListener(getActivity(),
+                                                    new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            Toast.makeText(getActivity(),
+                                                                    "Successful registration!",
+                                                                    Toast.LENGTH_SHORT).show();
+                                                            getActivity().getFragmentManager().beginTransaction().remove(RegisterFrag.this).commit();
+                                                        }
+                                                    });
+                                        }
                                     }
-                                }
-                            });
-
+                                });
+            }
         }
     }
     private class OnClickUser implements View.OnClickListener {
