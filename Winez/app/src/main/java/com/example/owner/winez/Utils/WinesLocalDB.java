@@ -36,8 +36,8 @@ public class WinesLocalDB {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            UserSQL.create(db);
-            WineSQL.create(db);
+            UserSQL.getInstance().create(db);
+            WineSQL.getInstance().create(db);
             LastUpdateSql.create(db);
         }
 

@@ -17,35 +17,52 @@ import java.util.List;
 
 
 // TODO : Michael - Complite here all actions on table user and add others tables
-public class UserSQL {
-    final static String USER_TABLE = "users";
-    final static String USER_TABLE_ID = "_id";
-    final static String USER_TABLE_NAME = "name";
-    final static String USER_TABLE_MAIL = "email";
+public class UserSQL extends EntitySQL<User> {
+    private static UserSQL _instance;
 
-    static public void create(SQLiteDatabase db) {
-        db.execSQL("create table " + USER_TABLE + " (" +
-                USER_TABLE_ID + " TEXT PRIMARY KEY," +
-                USER_TABLE_NAME + " TEXT," +
-                USER_TABLE_MAIL + " TEXT);");
+    private UserSQL(){}
+    public static UserSQL getInstance(){
+        if(_instance == null){
+            _instance = new UserSQL();
+        }
+        return _instance;
     }
 
-    public static void drop(SQLiteDatabase db) {
-        db.execSQL("drop table " + USER_TABLE + ";");
+    @Override
+    protected String getTable() {
+        return "users";
     }
 
-    public static void DeleteAll(SQLiteDatabase db) {
-        db.execSQL("delete from  " + USER_TABLE + ";");
+    @Override
+    protected String getTableName() {
+        return "name";
     }
 
-    public static List<User> getAllStudents(SQLiteDatabase db) {
-        Cursor cursor = db.query(USER_TABLE, null, null , null, null, null, null);
+    @Override
+    protected String getTableID() {
+        return "_id";
+    }
+
+    String getTableMail() {
+        return "email";
+    }
+
+    public void create(SQLiteDatabase db) {
+        db.execSQL("create table " + this.getTable() + " (" +
+                this.getTableID() + " TEXT PRIMARY KEY," +
+                this.getTableName() + " TEXT," +
+                this.getTableMail() + " TEXT);");
+    }
+
+    @Override
+    public List<User> getAllEntities(SQLiteDatabase db) {
+        Cursor cursor = db.query(this.getTable(), null, null , null, null, null, null);
         List<User> users = new LinkedList<User>();
 
         if (cursor.moveToFirst()) {
-            int idIndex = cursor.getColumnIndex(USER_TABLE_ID);
-            int nameIndex = cursor.getColumnIndex(USER_TABLE_NAME);
-            int emailIndex = cursor.getColumnIndex(USER_TABLE_MAIL);
+            int idIndex = cursor.getColumnIndex(this.getTableID());
+            int nameIndex = cursor.getColumnIndex(this.getTableName());
+            int emailIndex = cursor.getColumnIndex(this.getTableMail());
             do {
                 String id = cursor.getString(idIndex);
                 String name = cursor.getString(nameIndex);
@@ -57,16 +74,25 @@ public class UserSQL {
         return users;
     }
 
+    @Override
+    public void addEntity(SQLiteDatabase db, User toAdd) {
+        ContentValues values = new ContentValues();
+        values.put(this.getTableID(), toAdd.getUid());
+        values.put(this.getTableName(), toAdd.getName());
+        values.put(this.getTableMail(), toAdd.getEmail());
+        db.insertWithOnConflict(this.getTable(), this.getTableID(), values,SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
     @Nullable
-    public static User getUser(SQLiteDatabase db, String id) {
+    public User getUser(SQLiteDatabase db, String id) {
         //String where = USER_TABLE_ID + " = ?";
         //String[] args = {id};
-        Cursor cursor = db.query(USER_TABLE, null, null, null, null, null, null);
+        Cursor cursor = db.query(this.getTable(), null, null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
-            int idIndex = cursor.getColumnIndex(USER_TABLE_ID);
-            int nameIndex = cursor.getColumnIndex(USER_TABLE_NAME);
-            int mailIndex = cursor.getColumnIndex(USER_TABLE_MAIL);
+            int idIndex = cursor.getColumnIndex(this.getTableName());
+            int nameIndex = cursor.getColumnIndex(this.getTableName());
+            int mailIndex = cursor.getColumnIndex(this.getTableMail());
             String _id = cursor.getString(idIndex);
             String name = cursor.getString(nameIndex);
             String mail = cursor.getString(mailIndex);
@@ -77,18 +103,4 @@ public class UserSQL {
         return null;
     }
 
-    public static void add(SQLiteDatabase db, User usr) {
-        ContentValues values = new ContentValues();
-        values.put(USER_TABLE_ID, usr.getUid());
-        values.put(USER_TABLE_NAME, usr.getName());
-        values.put(USER_TABLE_MAIL, usr.getEmail());
-        db.insertWithOnConflict(USER_TABLE, USER_TABLE_ID, values,SQLiteDatabase.CONFLICT_REPLACE);
-    }
-
-    public static double getLastUpdateDate(SQLiteDatabase db){
-        return LastUpdateSql.getLastUpdate(db,USER_TABLE);
-    }
-    public static void setLastUpdateDate(SQLiteDatabase db, double date){
-        LastUpdateSql.setLastUpdate(db,USER_TABLE, date);
-    }
 }
