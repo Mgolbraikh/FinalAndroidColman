@@ -20,11 +20,9 @@ import com.example.owner.winez.Model.Model;
  */
 public class TabControlFragment extends Fragment {
 
-
     public TabControlFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,11 +56,17 @@ public class TabControlFragment extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public void onResume(){
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+        super.onResume();
+    }
 
     @Override
     public void onDestroyView(){
         // Checking before destroying
         if (!getActivity().isDestroyed()) {
+
             getActivity().getActionBar().removeAllTabs();
             getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         }

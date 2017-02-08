@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.owner.winez.MainActivity;
+import com.example.owner.winez.MyApplication;
 import com.example.owner.winez.Utils.ModelSQL.UserSQL;
 import com.example.owner.winez.Utils.ModelSQL.WineSQL;
 
@@ -13,12 +15,19 @@ import com.example.owner.winez.Utils.ModelSQL.WineSQL;
 
 public class WinesLocalDB {
     final static int VERSION = 7;
-
+    private static WinesLocalDB _instance;
     Helper sqlDb;
 
 
-    public WinesLocalDB(Context context){
+    private WinesLocalDB(Context context){
         sqlDb = new Helper(context);
+    }
+
+    public static WinesLocalDB getInstance(){
+        if(_instance == null){
+            _instance = new WinesLocalDB(MyApplication.getAppContext());
+        }
+        return _instance;
     }
 
     public SQLiteDatabase getWritableDB(){

@@ -1,9 +1,9 @@
 package com.example.owner.winez;
 
 
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +32,8 @@ public class AllWinesFragment extends Fragment {
     AllWinesAdapter mAdapter;
 
     public AllWinesFragment() {
-        Log.d("stuf:", "asdjfsadjfklasdjflkasjdf");
-     }
 
+     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
