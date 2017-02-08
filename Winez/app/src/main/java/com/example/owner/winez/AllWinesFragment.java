@@ -1,12 +1,14 @@
 package com.example.owner.winez;
 
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.owner.winez.Model.Model;
 import com.example.owner.winez.Utils.ApiClasses.WineApiClass;
+import com.example.owner.winez.Utils.Consts;
 import com.example.owner.winez.Utils.WineApi;
 
 import java.util.ArrayList;
@@ -60,6 +63,27 @@ public class AllWinesFragment extends Fragment {
 
         list.setAdapter(mAdapter);
         list.setEmptyView(view.findViewById(R.id.all_wines_empty_txt));
+        list.setClickable(true);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Log.d("TAG", "row selected " + position);
+
+                WineApiClass currentWine = allWines.get(Integer.parseInt(view.getTag().toString()));
+                Model.getInstance().addWineToDB(currentWine);
+
+                Fragment wineDetailFrag = new WineFragment();
+                FragmentTransaction ftr  = getActivity().getFragmentManager().beginTransaction();
+                Bundle WineToShow = new Bundle();
+                WineToShow.putString(Consts.WINE_BUNDLE_ID, (String) currentWine.getId());
+
+                wineDetailFrag.setArguments(WineToShow);
+                ftr.replace(R.id.WinezActivityMainView, wineDetailFrag);
+                ftr.addToBackStack(null);
+                ftr.show(wineDetailFrag);
+                ftr.commit();
+            }
+        });
 
         return view;
     }
