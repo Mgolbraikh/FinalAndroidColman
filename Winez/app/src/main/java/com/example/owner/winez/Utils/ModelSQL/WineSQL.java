@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.owner.winez.Model.User;
 import com.example.owner.winez.Model.Wine;
@@ -32,7 +33,17 @@ public class WineSQL {
     }
 
     public static void drop(SQLiteDatabase db) {
-            db.execSQL("drop table " + WINE + ";");
+        try {
+
+
+            Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM sqlite_master WHERE type = ? AND name = ?", new String[]{"table", WINE});
+            if (cursor.moveToFirst()) {
+                db.execSQL("drop table " + WINE + ";");
+            }
+            cursor.close();
+        }catch (Exception e){
+            Log.d("Exception:", e.getMessage());
+        }
     }
 
     public static List<Wine> getAllWines(SQLiteDatabase db) {
