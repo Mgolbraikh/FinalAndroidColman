@@ -58,6 +58,11 @@ public class TabControlFragment extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public void onResume(){
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+        super.onResume();
+    }
 
     @Override
     public void onDestroyView(){

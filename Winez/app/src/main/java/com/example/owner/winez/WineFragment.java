@@ -62,6 +62,7 @@ public class WineFragment extends Fragment {
 
         Bundle WineIdBundle = getArguments();
         setHasOptionsMenu(true);
+        getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         // Inflate the layout for this fragment
         final View view = inflater.inflate (R.layout.fragment_wine, container, false);
         final ListView commentsList = (ListView)view.findViewById(R.id.wine_comment_list);
