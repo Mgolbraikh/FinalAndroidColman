@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -90,11 +91,28 @@ public class WineFragment extends Fragment {
                 edType.setText(wine.getType());
                 EditText edYear = (EditText) view.findViewById(R.id.wine_vintage_year);
                 edYear.setText(wine.getVintage());
-                ((CheckBox)view.findViewById(R.id.wine_is_favorite))
-                        .setChecked(Model.getInstance()
-                                .getCurrentUser()
-                                .getUserWines()
-                                .containsKey(data.getUid()));
+                CheckBox star = ((CheckBox)view.findViewById(R.id.wine_is_favorite));
+                star.setChecked(Model.getInstance()
+                    .getCurrentUser()
+                    .getUserWines()
+                    .containsKey(data.getUid()));
+
+                star.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (b) {
+                            Model.getInstance()
+                                    .getCurrentUser()
+                                    .getUserWines()
+                                    .put(wine.getUid(),wine.getName());
+                        } else{
+                            Model.getInstance().getCurrentUser().getUserWines().remove(wine.getUid());
+                        }
+
+                        // Saving changes
+                        Model.getInstance().saveCurrentUser();
+                    }
+                });
 
             }
 

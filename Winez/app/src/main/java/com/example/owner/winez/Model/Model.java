@@ -115,4 +115,8 @@ public class Model {
     public void getDBUser() {
         WinezAuth.getInstance().fetchUser();
     }
+
+    public void saveCurrentUser() {
+        this.saveCurrentUser(this.getCurrentUser());
+    }
 }
