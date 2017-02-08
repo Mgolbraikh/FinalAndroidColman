@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.MenuItem;
 
 import com.example.owner.winez.Model.Model;
@@ -65,7 +66,8 @@ public class MainActivity extends Activity {
 
     @Override
     public void onResume(){
-
+        super.onResume();
+        Log.d("Main","resume");
         if (getFragmentManager().getBackStackEntryCount() ==0) {
             if (!Model.getInstance().isAuthenticated()) {
                 showRegistration();
@@ -77,6 +79,8 @@ public class MainActivity extends Activity {
             Model.getInstance().setOnAuthChangeListener(new WinezAuth.OnAuthChangeListener() {
                 @Override
                 public void onLogin(User usr) {
+                    //Save remote user to local db
+                    Model.getInstance().saveCurrentUserLocal(usr);
                     buildTabs();
                 }
 
@@ -87,8 +91,7 @@ public class MainActivity extends Activity {
                 }
             });
         }
-        super.onResume();
-        Log.d("Main","resume");
+
     }
 
 

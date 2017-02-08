@@ -41,15 +41,6 @@ public class Model {
     }
 
     /**
-     * Get a user by user uid
-     * @param id
-     * @param getOnCompleteResult
-     */
-    public void getUser(String id, WinezDB.GetOnCompleteResult<User> getOnCompleteResult){
-        this.mRemoteDB.getSingle(User.class.getSimpleName(), User.class,id, getOnCompleteResult);
-    }
-
-    /**
      * Get a wine by wine uid
      * @param id
      * @param getOnCompleteResult
@@ -64,7 +55,19 @@ public class Model {
     }
 
     public Task<Void> saveCurrentUser(User toSave){
+        // Save to local - save user and his wines
+        //final double lastUpdateDate = UserSQL.getLastUpdateDate(this.modelLocalSql.getReadbleDB());
+        saveCurrentUserLocal(toSave);
         return this.mRemoteDB.saveWithId(User.class.getSimpleName(),toSave);
+    }
+
+    public void saveCurrentUserLocal(User toSave){
+        // Save to local - save user and his wines
+        //final double lastUpdateDate = UserSQL.getLastUpdateDate(this.modelLocalSql.getReadbleDB());
+        UserSQL.add(this.modelLocalSql.getReadbleDB(),toSave);
+        WineSQL.drop(this.modelLocalSql.getReadbleDB());
+        WineSQL.create(this.modelLocalSql.getReadbleDB());
+        WineSQL.add(this.modelLocalSql.getReadbleDB(),toSave.getUserWines());
     }
 
 
@@ -89,6 +92,7 @@ public class Model {
     }
 
     public User getCurrentUser() {
+
         return WinezAuth.getInstance().getCurrentUser();
     }
 
