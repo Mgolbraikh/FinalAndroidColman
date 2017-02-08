@@ -19,6 +19,8 @@ import com.example.owner.winez.Utils.WinezAuth;
 public class MainActivity extends Activity {
     private static final int REQUEST_WRITE_STORAGE = 112;
 
+    // TODO : check if there is internet connection via google client - if there isnt check local db for user/.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
