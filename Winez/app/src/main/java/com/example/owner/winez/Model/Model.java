@@ -126,10 +126,6 @@ public class Model {
         WinezStorage.getInstance().saveImage(image,url,onSaveCompleteListener);
     }
 
-    public void getDBUser() {
-        WinezAuth.getInstance().fetchUser();
-    }
-
     public void saveCurrentUser() {
         this.saveCurrentUser(this.getCurrentUser());
     }
