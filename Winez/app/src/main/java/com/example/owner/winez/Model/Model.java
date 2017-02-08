@@ -64,8 +64,8 @@ public class Model {
     public void saveCurrentUserLocal(User toSave){
         // Save to local - save user and his wines
         UserSQL.add(this.modelLocalSql.getReadbleDB(),toSave);
-        WineSQL.DeleteAll(this.modelLocalSql.getReadbleDB());
-        WineSQL.add(this.modelLocalSql.getReadbleDB(),toSave.getUserWines());
+        WineSQL.getInstance().deleteAll(this.modelLocalSql.getReadbleDB());
+        WineSQL.getInstance().add(this.modelLocalSql.getReadbleDB(),toSave.getUserWines());
     }
 
 
@@ -78,7 +78,7 @@ public class Model {
     }
 
     public void signOut() {
-        WineSQL.DeleteAll(this.modelLocalSql.getReadbleDB());
+        WineSQL.getInstance().deleteAll(this.modelLocalSql.getReadbleDB());
         UserSQL.DeleteAll(this.modelLocalSql.getReadbleDB());
         WinezAuth.getInstance().signOut();
 
@@ -100,7 +100,7 @@ public class Model {
     public User getCurrentUserLocal() {
 
         User toReturn =  UserSQL.getUser(this.modelLocalSql.getReadbleDB(),this.getCurrentUser().getUid());
-        List<Wine> wines = WineSQL.getAllWines(this.modelLocalSql.getReadbleDB());
+        List<Wine> wines = WineSQL.getInstance().getAllEntities(this.modelLocalSql.getReadbleDB());
 
         for (Wine wine : wines ){
             toReturn.getUserWines().put(wine.getUid(),wine.getName());

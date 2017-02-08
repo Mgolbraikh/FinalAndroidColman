@@ -84,11 +84,4 @@ public class UserSQL {
         values.put(USER_TABLE_MAIL, usr.getEmail());
         db.insertWithOnConflict(USER_TABLE, USER_TABLE_ID, values,SQLiteDatabase.CONFLICT_REPLACE);
     }
-
-    public static double getLastUpdateDate(SQLiteDatabase db){
-        return LastUpdateSql.getLastUpdate(db,USER_TABLE);
-    }
-    public static void setLastUpdateDate(SQLiteDatabase db, double date){
-        LastUpdateSql.setLastUpdate(db,USER_TABLE, date);
-    }
 }
