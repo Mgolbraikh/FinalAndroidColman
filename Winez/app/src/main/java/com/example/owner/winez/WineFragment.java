@@ -76,6 +76,9 @@ public class WineFragment extends Fragment {
                     @Override
                     public void onResult(List<Comment> data) {
                         comments = data;
+                        view.findViewById(R.id.wine_comments_waiting_bar).setVisibility(View.GONE);
+                        view.findViewById(R.id.wine_comments_linear_layout_to_show).setVisibility(View.VISIBLE);
+
                         mAdapter.notifyDataSetChanged();
                     }
 
