@@ -91,7 +91,10 @@ public class MainActivity extends Activity {
                  fm.findFragmentById(R.id.WinezActivityMainView) instanceof TabControlFragment)) {
             getFragmentManager().popBackStack();
             this.finish();
-        } else {
+        } else if (fm.getBackStackEntryCount() > 0) {
+                Log.i("MainActivity", "popping backstack");
+                fm.popBackStack();
+        }else{
             Log.i("MainActivity", "nothing on backstack, calling super");
 
             super.onBackPressed();
