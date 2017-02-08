@@ -32,7 +32,7 @@ public class WineSQL {
     }
 
     public static void drop(SQLiteDatabase db) {
-        db.execSQL("drop table " + WINE + ";");
+            db.execSQL("drop table " + WINE + ";");
     }
 
     public static List<Wine> getAllWines(SQLiteDatabase db) {
@@ -46,7 +46,7 @@ public class WineSQL {
             do {
                 String id = cursor.getString(idIndex);
                 String name = cursor.getString(nameIndex);
-                String email = cursor.getString(pictureIndex);
+                String picture = cursor.getString(pictureIndex);
                 Wine wine = new Wine(id,name);
                 wines.add(wine);
             } while (cursor.moveToNext());

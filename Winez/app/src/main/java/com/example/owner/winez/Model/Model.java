@@ -80,7 +80,11 @@ public class Model {
     }
 
     public void signOut() {
+        WineSQL.drop(this.modelLocalSql.getReadbleDB());
+        UserSQL.drop(this.modelLocalSql.getReadbleDB());
         WinezAuth.getInstance().signOut();
+
+
     }
 
     public void setOnAuthChangeListener(WinezAuth.OnAuthChangeListener onAuthChangeListener){
@@ -95,6 +99,18 @@ public class Model {
 
         return WinezAuth.getInstance().getCurrentUser();
     }
+    public User getCurrentUserLocal() {
+
+        User toReturn =  UserSQL.getUser(this.modelLocalSql.getReadbleDB(),this.getCurrentUser().getUid());
+        List<Wine> wines = WineSQL.getAllWines(this.modelLocalSql.getReadbleDB());
+
+        for (Wine wine : wines ){
+            toReturn.getUserWines().put(wine.getUid(),wine.getName());
+        }
+
+        return  toReturn;
+    }
+
 
     public void addWine(WineApiClass wineToAdd)
     {
