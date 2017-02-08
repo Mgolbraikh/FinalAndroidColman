@@ -81,10 +81,6 @@ public class MainActivity extends Activity {
                 public void onLogin(User usr) {
                     //Save remote user to local db
                     Model.getInstance().saveCurrentUserLocal(usr);
-
-                    // Read data;
-                    Model.getInstance().getCurrentUserLocal();
-
                     buildTabs();
                 }
 
