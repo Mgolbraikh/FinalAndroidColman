@@ -11,6 +11,7 @@ import com.example.owner.winez.Utils.LastUpdateSql;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by owner on 01-Feb-17.
@@ -34,7 +35,7 @@ public class WineSQL {
         db.execSQL("drop table " + WINE + ";");
     }
 
-    public static List<Wine> getAllStudents(SQLiteDatabase db) {
+    public static List<Wine> getAllWines(SQLiteDatabase db) {
         Cursor cursor = db.query(WINE, null, null , null, null, null, null);
         List<Wine> wines = new LinkedList<Wine>();
 
@@ -46,7 +47,7 @@ public class WineSQL {
                 String id = cursor.getString(idIndex);
                 String name = cursor.getString(nameIndex);
                 String email = cursor.getString(pictureIndex);
-                Wine wine = new Wine(name,id);
+                Wine wine = new Wine(id,name);
                 wines.add(wine);
             } while (cursor.moveToNext());
         }
@@ -86,5 +87,12 @@ public class WineSQL {
     }
     public static void setLastUpdateDate(SQLiteDatabase db, double date){
         LastUpdateSql.setLastUpdate(db, WINE, date);
+    }
+
+    public static void add(SQLiteDatabase db, Map<String,String> wines) {
+        for (Map.Entry<String,String> wine:  wines.entrySet()){
+            add(db, new Wine(wine.getKey(), wine.getValue()));
+        }
+        //this.add(db,);
     }
 }
