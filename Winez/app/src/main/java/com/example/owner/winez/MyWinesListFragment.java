@@ -37,7 +37,6 @@ public class MyWinesListFragment extends Fragment {
     }
 
     // TODO : Local DB to do
-    // TODO : Comments - everything
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,7 +89,6 @@ public class MyWinesListFragment extends Fragment {
         @Override
         public Object getItem(int i) {
             return myWines().keySet().toArray()[i];
-
         }
 
         @Override
