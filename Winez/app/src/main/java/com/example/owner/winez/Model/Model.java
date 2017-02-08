@@ -63,11 +63,9 @@ public class Model {
 
     public void saveCurrentUserLocal(User toSave){
         // Save to local - save user and his wines
-        //final double lastUpdateDate = UserSQL.getLastUpdateDate(this.modelLocalSql.getReadbleDB());
-        UserSQL.add(this.modelLocalSql.getReadbleDB(),toSave);
-        WineSQL.drop(this.modelLocalSql.getReadbleDB());
-        WineSQL.create(this.modelLocalSql.getReadbleDB());
-        WineSQL.add(this.modelLocalSql.getReadbleDB(),toSave.getUserWines());
+        UserSQL.getInstance().addEntity(this.modelLocalSql.getReadbleDB(), toSave);
+        WineSQL.getInstance().deleteAll(this.modelLocalSql.getReadbleDB());
+        WineSQL.getInstance().add(this.modelLocalSql.getReadbleDB(),toSave.getUserWines());
     }
 
 
@@ -80,7 +78,11 @@ public class Model {
     }
 
     public void signOut() {
+        WineSQL.getInstance().deleteAll(this.modelLocalSql.getReadbleDB());
+        UserSQL.getInstance().deleteAll(this.modelLocalSql.getReadbleDB());
         WinezAuth.getInstance().signOut();
+
+
     }
 
     public void setOnAuthChangeListener(WinezAuth.OnAuthChangeListener onAuthChangeListener){
@@ -95,6 +97,18 @@ public class Model {
 
         return WinezAuth.getInstance().getCurrentUser();
     }
+    public User getCurrentUserLocal() {
+
+        User toReturn =  UserSQL.getInstance().getUser(this.modelLocalSql.getReadbleDB(),this.getCurrentUser().getUid());
+        List<Wine> wines = WineSQL.getInstance().getAllEntities(this.modelLocalSql.getReadbleDB());
+
+        for (Wine wine : wines ){
+            toReturn.getUserWines().put(wine.getUid(),wine.getName());
+        }
+
+        return  toReturn;
+    }
+
 
     public void addWine(WineApiClass wineToAdd)
     {

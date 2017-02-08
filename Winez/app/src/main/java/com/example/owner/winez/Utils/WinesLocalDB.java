@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.owner.winez.Utils.ModelSQL.UserSQL;
+import com.example.owner.winez.Utils.ModelSQL.WineSQL;
 
 /**
  * Created by owner on 31-Jan-17.
@@ -35,8 +36,9 @@ public class WinesLocalDB {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            UserSQL.create(db);
-            //LastUpdateSql.create(db);
+            UserSQL.getInstance().create(db);
+            WineSQL.getInstance().create(db);
+            LastUpdateSql.create(db);
         }
 
         @Override
