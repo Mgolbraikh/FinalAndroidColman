@@ -29,7 +29,7 @@ public class Model {
     WinesLocalDB modelLocalSql;
 
     private Model() {
-        modelLocalSql = new WinesLocalDB(MyApplication.getAppContext());
+        modelLocalSql = WinesLocalDB.getInstance();
         mRemoteDB = WinezDB.getInstance();
     }
 
