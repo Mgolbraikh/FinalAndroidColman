@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 
 /**
  * Created by Ziv on 05/02/2017.
@@ -73,13 +74,54 @@ public class WinezStorage {
         void done();
     }
 
+    /**
+     * Gets an image according to path given
+     * @param path
+     * @param onGetBitmapListener
+     */
     public void getImage(String path, final OnGetBitmapListener onGetBitmapListener){
-        Bitmap toRet = this.loadImageFromFile(path);
+        Tuple<Bitmap,Long> toRet = this.loadImageFromFile(path);
         if (toRet != null) {
-            onGetBitmapListener.onResult(toRet);
+            // Returning file in the meantime
+            onGetBitmapListener.onResult(toRet.getT());
+
+            // Returning newer image if there is one
+            this.checkStorageForUpdate(path,toRet,onGetBitmapListener);
         } else {
             loadFileFromStorage(path, onGetBitmapListener);
         }
+    }
+
+    /**
+     * Invokes with new image if there is one.
+     * If not it dosent return an image
+     * @param path
+     * @param toCheck
+     * @param onGetBitmapListener
+     */
+    private void checkStorageForUpdate(final String path, final Tuple<Bitmap, Long> toCheck, final OnGetBitmapListener onGetBitmapListener) {
+        final StorageReference ref = this.mStorage.getReference().child(path);
+
+        ref.getMetadata().addOnCompleteListener(new OnCompleteListener<StorageMetadata>() {
+            @Override
+            public void onComplete(@NonNull Task<StorageMetadata> task) {
+                if (task.isSuccessful()){
+                    StorageMetadata meta = task.getResult();
+                    if (meta.getUpdatedTimeMillis() > toCheck.getX()) {
+                        getFromStorageUsingMetaData(meta, ref, new OnGetBitmapListener() {
+                            @Override
+                            public void onResult(Bitmap image) {
+                                onGetBitmapListener.onResult(image);
+                            }
+
+                            @Override
+                            public void onCancelled() {
+                            }
+                        }, path);
+                    }
+                }
+            }
+        });
     }
 
     private void loadFileFromStorage(final String path, final OnGetBitmapListener onGetBitmapListener) {
@@ -91,25 +133,30 @@ public class WinezStorage {
             @Override
             public void onComplete(@NonNull Task<StorageMetadata> task) {
                 if (task.isSuccessful()){
-                    final long bytes = task.getResult().getSizeBytes();
-                    // Getting image
-                    ref.getBytes(bytes).addOnCompleteListener(new OnCompleteListener<byte[]>() {
-                        @Override
-                        public void onComplete(@NonNull Task<byte[]> task) {
-                            if(task.isSuccessful()){
-                                Bitmap bitmap = BitmapFactory
-                                        .decodeByteArray(task.getResult(),
-                                                0,
-                                                (int)bytes);
-                                onGetBitmapListener.onResult(bitmap);
-                                saveImageToFile(bitmap,path);
-                            }
-                            else{
-                                onGetBitmapListener.onCancelled();
-                            }
-                        }
-                    });
+                    StorageMetadata meta = task.getResult();
+                    getFromStorageUsingMetaData(meta, ref, onGetBitmapListener, path);
                 }else{
+                    onGetBitmapListener.onCancelled();
+                }
+            }
+        });
+    }
+
+    private void getFromStorageUsingMetaData(StorageMetadata meta, StorageReference ref, final OnGetBitmapListener onGetBitmapListener, final String path) {
+        final long bytes = meta.getSizeBytes();
+        // Getting image
+        ref.getBytes(bytes).addOnCompleteListener(new OnCompleteListener<byte[]>() {
+            @Override
+            public void onComplete(@NonNull Task<byte[]> task) {
+                if(task.isSuccessful()){
+                    Bitmap bitmap = BitmapFactory
+                            .decodeByteArray(task.getResult(),
+                                    0,
+                                    (int)bytes);
+                    onGetBitmapListener.onResult(bitmap);
+                    saveImageToFile(bitmap,path);
+                }
+                else{
                     onGetBitmapListener.onCancelled();
                 }
             }
@@ -121,20 +168,21 @@ public class WinezStorage {
      * @param imageFileName
      * @return
      */
-    private Bitmap loadImageFromFile(String imageFileName) {
-        Bitmap bitmap = null;
+    private Tuple<Bitmap,Long> loadImageFromFile(String imageFileName) {
+        Tuple<Bitmap,Long> toret = null;
         try {
             File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
             File imageFile = new File(dir, imageFileName);
             if(imageFile.exists()) {
+                long lastMod = imageFile.lastModified();
                 InputStream inputStream = new FileInputStream(imageFile);
-                bitmap = BitmapFactory.decodeStream(inputStream);
+                toret = new Tuple<>(BitmapFactory.decodeStream(inputStream), lastMod);
                 Log.d("tag", "got image from cache: " + imageFileName);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        return bitmap;
+        return toret;
     }
 
 
