@@ -140,12 +140,4 @@ public class WinezDB {
         void onCancel(String err);
     }
 
-    /**
-     *
-     * @see this is fir recieving lists
-     */
-    public interface GetOnCompleteResults<T>{
-        public void onResult(List<T> data);
-        public void onCancel();
-    }
 }

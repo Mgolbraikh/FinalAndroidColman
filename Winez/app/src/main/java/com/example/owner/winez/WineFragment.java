@@ -125,9 +125,7 @@ public class WineFragment extends Fragment {
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         if (b) {
                             Model.getInstance()
-                                    .getCurrentUser()
-                                    .getUserWines()
-                                    .put(wine.getUid(),wine.getName());
+                                    .addWineToUser(wine);
                         } else{
                             Model.getInstance().getCurrentUser().getUserWines().remove(wine.getUid());
                         }

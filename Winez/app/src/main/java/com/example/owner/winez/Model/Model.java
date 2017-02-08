@@ -117,6 +117,26 @@ public class Model {
         this.saveCurrentUser(this.getCurrentUser());
     }
 
+    /**
+     * Adds wine to db without adding it to user wine list
+     * @param wineToAdd
+     */
+    public void addWineToDB(WineApiClass wineToAdd)
+    {
+        this.saveWine(new Wine(wineToAdd));
+    }
+
+    /**
+     * Adds wine to user's list
+     * @param wineToAdd
+     */
+    public void addWineToUser(Wine wineToAdd)
+    {
+        this.getCurrentUser().getUserWines().put(wineToAdd.getUid(), wineToAdd.getName());
+        this.saveCurrentUser(this.getCurrentUser());
+    }
+
+
     public void removeWine(WineApiClass toRemove){
         this.getCurrentUser().getUserWines().remove(toRemove.getId());
         this.saveCurrentUser(this.getCurrentUser());
