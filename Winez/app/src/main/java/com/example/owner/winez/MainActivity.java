@@ -92,7 +92,7 @@ public class MainActivity extends Activity {
                 @Override
                 public void onLogin(User usr) {
                     //Save remote user to local db
-                    Model.getInstance().saveCurrentUserLocal(usr);
+             //       Model.getInstance().saveCurrentUserLocal(usr);
                     buildTabs();
                 }
 

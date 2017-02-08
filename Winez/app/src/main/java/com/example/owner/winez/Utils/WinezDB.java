@@ -128,12 +128,12 @@ public class WinezDB {
         this.getCollection(entityName).child(parentId).child(toSave.getUid()).setValue(toSave.toMap());
     }
 
-    public void saveChildWithoutId(String entityName, String parentId, Entity toSave){
+    public Task<Void> saveChildWithoutId(String entityName, String parentId, Entity toSave){
         toSave.setSaveTimeStamp(new Date().getTime());
         DatabaseReference ref = this.getCollection(entityName).child(parentId).push();
         String key = ref.getKey();
         toSave.setUid(key);
-        ref.setValue(toSave.toMap());
+        return ref.setValue(toSave.toMap());
     }
     public interface GetOnCompleteResult<T>{
         void onResult(T data);

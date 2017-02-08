@@ -57,7 +57,7 @@ public class Model {
     public Task<Void> saveCurrentUser(User toSave){
         // Save to local - save user and his wines
         //final double lastUpdateDate = UserSQL.getLastUpdateDate(this.modelLocalSql.getReadbleDB());
-        saveCurrentUserLocal(toSave);
+//        saveCurrentUserLocal(toSave);
         return this.mRemoteDB.saveWithId(User.class.getSimpleName(),toSave);
     }
 
@@ -69,8 +69,8 @@ public class Model {
     }
 
 
-    public void saveComment(Comment cmt){
-        this.mRemoteDB.saveChildWithoutId(Comment.class.getSimpleName(), cmt.getWineID(), cmt);
+    public Task<Void> saveComment(Comment cmt){
+        return this.mRemoteDB.saveChildWithoutId(Comment.class.getSimpleName(), cmt.getWineID(), cmt);
     }
 
     public Task<AuthResult> authenticate(String email, String password) {
@@ -112,7 +112,7 @@ public class Model {
 
     public void addWine(WineApiClass wineToAdd)
     {
-        this.mRemoteDB.saveWithId(Wine.class.getSimpleName(), new Wine(wineToAdd));
+        this.saveWine(new Wine(wineToAdd));
         this.getCurrentUser().getUserWines().put(wineToAdd.getId(), wineToAdd.getName());
         this.saveCurrentUser(this.getCurrentUser());
     }
@@ -126,11 +126,15 @@ public class Model {
         WinezStorage.getInstance().saveImage(image,url,onSaveCompleteListener);
     }
 
-    public void getDBUser() {
-        WinezAuth.getInstance().fetchUser();
-    }
-
     public void saveCurrentUser() {
         this.saveCurrentUser(this.getCurrentUser());
+    }
+
+    public void saveWine(Wine wine) {
+        WinezDB.getInstance().saveWithId(Wine.class.getSimpleName(), wine);
+    }
+
+    public void getImage(String picture, WinezStorage.OnGetBitmapListener onGetBitmapListener) {
+        WinezStorage.getInstance().getImage(picture,onGetBitmapListener);
     }
 }
