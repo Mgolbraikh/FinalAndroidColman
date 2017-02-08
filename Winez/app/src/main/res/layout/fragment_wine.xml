@@ -78,27 +78,40 @@
         <!--Comment section-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
+                <ProgressBar
+                    android:id="@+id/wine_comments_waiting_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:layout_centerInParent="true"
+                   android:visibility="visible"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/comments" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:orientation="vertical"
+                    android:id="@+id/wine_comments_linear_layout_to_show">
 
-            <EditText
-                android:id="@+id/wine_new_comment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/enter_comment"
-                android:inputType="text" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/comments" />
 
-            <ListView
-                android:id="@+id/wine_comment_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                <EditText
+                    android:id="@+id/wine_new_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_comment"
+                    android:inputType="text" />
+
+                <ListView
+                    android:id="@+id/wine_comment_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
         </LinearLayout>
 </LinearLayout>
