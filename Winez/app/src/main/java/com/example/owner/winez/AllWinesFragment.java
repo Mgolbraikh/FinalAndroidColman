@@ -38,7 +38,7 @@ public class AllWinesFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_all_wines, container, false);
+        final View view = inflater.inflate(R.layout.fragment_all_wines, container, false);
         final ListView list = (ListView)view.findViewById(R.id.all_wines_list);
         mAdapter = new AllWinesAdapter();
         allWines = new ArrayList<>();
@@ -46,7 +46,10 @@ public class AllWinesFragment extends Fragment {
             @Override
             public void onResult(ArrayList<WineApiClass> data) {
                 allWines = data;
+                view.findViewById(R.id.all_wines_waiting_bar).setVisibility(View.GONE);
+                view.findViewById(R.id.all_wines_layout).setVisibility(View.VISIBLE);
                 mAdapter.notifyDataSetChanged();
+
             }
 
             @Override
