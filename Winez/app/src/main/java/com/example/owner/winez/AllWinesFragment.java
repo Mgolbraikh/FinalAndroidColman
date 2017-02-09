@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.owner.winez.Model.Model;
+import com.example.owner.winez.Model.Wine;
 import com.example.owner.winez.Utils.ApiClasses.WineApiClass;
 import com.example.owner.winez.Utils.Consts;
 import com.example.owner.winez.Utils.WineApi;
@@ -118,7 +119,7 @@ public class AllWinesFragment extends Fragment {
                         WineApiClass currentWine =
                                 (WineApiClass)getItem((Integer) ((View)view.getParent()).getTag());
                         if(((CheckBox)view).isChecked()) {
-                            Model.getInstance().addWine(currentWine);
+                            Model.getInstance().addWine(new Wine(currentWine));
                         }else{
                             Model.getInstance().removeWine(currentWine);
                         }

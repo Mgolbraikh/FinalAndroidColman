@@ -46,12 +46,14 @@ public class WineFragment extends Fragment {
     Wine wine;
     List<Comment> comments;
     CommentsAdapter mAdapter;
-    ImageView  wineImage;
+    ImageView wineImage;
+    boolean isEmptyList;
     static final int REQUEST_IMAGE_CAPTURE = 1;
+
     public WineFragment() {
         // Required empty public constructor
     }
-    
+
     // // TODO: 04-Feb-17 need to add the comment to wines and save and load from db
     // TODO: Add back to home button (not backpress but the back on top)
 
@@ -64,30 +66,46 @@ public class WineFragment extends Fragment {
         setHasOptionsMenu(true);
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         // Inflate the layout for this fragment
-        final View view = inflater.inflate (R.layout.fragment_wine, container, false);
-        final ListView commentsList = (ListView)view.findViewById(R.id.wine_comment_list);
+        final View view = inflater.inflate(R.layout.fragment_wine, container, false);
+        final ListView commentsList = (ListView) view.findViewById(R.id.wine_comment_list);
         mAdapter = new CommentsAdapter();
         comments = new ArrayList<>();
         commentsList.setAdapter(mAdapter);
+        isEmptyList = true;
         Model.getInstance().getWine(WineIdBundle.getString(Consts.WINE_BUNDLE_ID), new WinezDB.GetOnCompleteResult<Wine>() {
             @Override
             public void onResult(Wine data) {
                 wine = data;
-                Model.getInstance().getCommentsForWine(wine.getUid(), new WinezDB.GetOnCompleteResult<List<Comment>>() {
+                Model.getInstance().getCommentsForWine(wine.getUid(), new WinezDB.OnChildEventListener<Comment>() {
                     @Override
-                    public void onResult(List<Comment> data) {
-                        comments = data;
-                        view.findViewById(R.id.wine_comments_waiting_bar).setVisibility(View.GONE);
-                        view.findViewById(R.id.wine_comments_linear_layout_to_show).setVisibility(View.VISIBLE);
-
+                    public void onChildAdded(Comment child, String previousChildName) {
+                        comments.add(child);
                         mAdapter.notifyDataSetChanged();
                     }
 
                     @Override
-                    public void onCancel(String err) {
+                    public void onChildChanged(Comment child, String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(Comment child) {
+                        comments.remove(child);
+                        mAdapter.notifyDataSetChanged();
+
+                    }
+
+                    @Override
+                    public void onChildMoved(Comment child, String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(String err) {
 
                     }
                 });
+
 
                 TextView tvTitle = (TextView) view.findViewById(R.id.wine_wine_title);
                 tvTitle.setText(wine.getName());
@@ -97,8 +115,8 @@ public class WineFragment extends Fragment {
                 edType.setText(wine.getType());
                 EditText edYear = (EditText) view.findViewById(R.id.wine_vintage_year);
                 edYear.setText(wine.getVintage());
-                CheckBox star = ((CheckBox)view.findViewById(R.id.wine_is_favorite));
-                wineImage = (ImageView)view.findViewById(R.id.wine_image);
+                CheckBox star = ((CheckBox) view.findViewById(R.id.wine_is_favorite));
+                wineImage = (ImageView) view.findViewById(R.id.wine_image);
 
                 // Gets wine image if there is one
                 if (wine.getPicture() != null) {
@@ -114,19 +132,19 @@ public class WineFragment extends Fragment {
                         }
                     });
                 }
+
                 // Checking checkbox if needed
                 star.setChecked(Model.getInstance()
-                    .getCurrentUser()
-                    .getUserWines()
-                    .containsKey(data.getUid()));
+                        .getCurrentUser()
+                        .getUserWines()
+                        .containsKey(data.getUid()));
 
                 star.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                         if (b) {
-                            Model.getInstance()
-                                    .addWineToUser(wine);
-                        } else{
+                            Model.getInstance().addWine(wine);
+                        } else {
                             Model.getInstance().getCurrentUser().getUserWines().remove(wine.getUid());
                         }
 
@@ -146,28 +164,26 @@ public class WineFragment extends Fragment {
         ((EditText) view.findViewById(R.id.wine_new_comment)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-                if((actionId == EditorInfo.IME_ACTION_DONE) ||
+                if ((actionId == EditorInfo.IME_ACTION_DONE) ||
                         (actionId == EditorInfo.IME_ACTION_NEXT)) {
 
-                    // Creatin comment
+                    // Creating comment
                     Comment toAdd = new Comment(wine.getUid(),
                             Model.getInstance().getCurrentUser().getUid(),
                             textView.getText().toString(),
                             Model.getInstance().getCurrentUser().getName());
+
                     // Saving to remote
                     Model.getInstance().saveComment(toAdd);
 
-                    // Adding to list
-                    comments.add(toAdd);
-                    mAdapter.notifyDataSetChanged();
                     textView.setText("");
                     return true; // consume.
-                    }
-                return false;
                 }
+                return false;
+            }
         });
 
-        return  view;
+        return view;
     }
 
     @Override
@@ -176,20 +192,18 @@ public class WineFragment extends Fragment {
         inflater.inflate(R.menu.uppermenu, menu);
         menu.findItem(R.id.menu_add_picture);
         menu.findItem(R.id.menu_signout).setVisible(true);
-        super.onCreateOptionsMenu(menu,inflater);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-            case R.id.menu_signout:
-            {
+        switch (item.getItemId()) {
+            case R.id.menu_signout: {
                 Model.getInstance().signOut();
 
                 break;
             }
-            case R.id.menu_add_picture:{
+            case R.id.menu_add_picture: {
                 addPicture();
                 break;
             }
@@ -198,29 +212,30 @@ public class WineFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void addPicture(){
+    private void addPicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             final Bitmap image = (Bitmap) extras.get("data");
 
-            final String imgUrl =  wine.getUid() + ".jpg";
-            Model.getInstance().saveImage(image,imgUrl, new WinezStorage.OnSaveCompleteListener(){
+            final String imgUrl = wine.getUid() + ".jpg";
+            Model.getInstance().saveImage(image, imgUrl, new WinezStorage.OnSaveCompleteListener() {
 
                 @Override
                 public void failed() {
-                    Toast.makeText(getActivity(),"Save failed",Toast.LENGTH_LONG);
+                    Toast.makeText(getActivity(), "Save failed", Toast.LENGTH_LONG);
                 }
 
                 @Override
                 public void done() {
-                    Toast.makeText(getActivity(),"Save complete",Toast.LENGTH_LONG);
+                    Toast.makeText(getActivity(), "Save complete", Toast.LENGTH_LONG);
                     wine.setPicture(imgUrl);
                     Model.getInstance().saveWine(wine);
                     wineImage.setImageBitmap(image);
@@ -228,7 +243,8 @@ public class WineFragment extends Fragment {
             });
         }
     }
-    class CommentsAdapter extends BaseAdapter{
+
+    class CommentsAdapter extends BaseAdapter {
         @Override
         public int getCount() {
             return comments.size();
@@ -246,18 +262,17 @@ public class WineFragment extends Fragment {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            if (view == null)
-            {
-                view = LayoutInflater.from(getActivity()).inflate(R.layout.row_comment_list,null);
+            if (view == null) {
+                view = LayoutInflater.from(getActivity()).inflate(R.layout.row_comment_list, null);
             }
 
             // Check if this is not the first and the user wishes to enter data
-                Comment currComent = (Comment) this.getItem(i);
-                TextView tvName = (TextView) view.findViewById(R.id.row_comment_name);
-                TextView tvText = (TextView) view.findViewById(R.id.row_comment_text);
+            Comment currComent = (Comment) this.getItem(i);
+            TextView tvName = (TextView) view.findViewById(R.id.row_comment_name);
+            TextView tvText = (TextView) view.findViewById(R.id.row_comment_text);
 
-                tvName.setText(currComent.getUserName());
-                tvText.setText(currComent.getText());
+            tvName.setText(currComent.getUserName());
+            tvText.setText(currComent.getText());
 
             return view;
         }

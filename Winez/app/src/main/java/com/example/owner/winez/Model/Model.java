@@ -1,14 +1,9 @@
 package com.example.owner.winez.Model;
 
 import android.graphics.Bitmap;
-import android.support.v4.content.ContextCompat;
-
-import com.example.owner.winez.Manifest;
-import com.example.owner.winez.MyApplication;
 import com.example.owner.winez.Utils.ApiClasses.WineApiClass;
 import com.example.owner.winez.Utils.ModelSQL.UserSQL;
 import com.example.owner.winez.Utils.ModelSQL.WineSQL;
-import com.example.owner.winez.Utils.WineApi;
 import com.example.owner.winez.Utils.WinesLocalDB;
 import com.example.owner.winez.Utils.WinezAuth;
 import com.example.owner.winez.Utils.WinezDB;
@@ -50,14 +45,13 @@ public class Model {
     }
 
     public void getCommentsForWine(String wineId,
-                                   WinezDB.GetOnCompleteResult<List<Comment>> getOnCompleteResult){
-        this.mRemoteDB.getAllChildren(Comment.class.getSimpleName(), Comment.class, wineId, getOnCompleteResult);
+                                   WinezDB.OnChildEventListener<Comment> getOnCompleteResult){
+        this.mRemoteDB.getUpdatesForChildren(Comment.class.getSimpleName(), Comment.class, wineId, getOnCompleteResult);
     }
 
     public Task<Void> saveCurrentUser(User toSave){
         // Save to local - save user and his wines
-        //final double lastUpdateDate = UserSQL.getLastUpdateDate(this.modelLocalSql.getReadbleDB());
-//        saveCurrentUserLocal(toSave);
+        //saveCurrentUserLocal(toSave);
         return this.mRemoteDB.saveWithId(User.class.getSimpleName(),toSave);
     }
 
@@ -109,12 +103,15 @@ public class Model {
         return  toReturn;
     }
 
-
-    public void addWine(WineApiClass wineToAdd)
+    /**
+     * Adds wine to user list
+     * @param wineToAdd
+     */
+    public void addWine(Wine wineToAdd)
     {
-        this.saveWine(new Wine(wineToAdd));
-        this.getCurrentUser().getUserWines().put(wineToAdd.getId(), wineToAdd.getName());
-        this.saveCurrentUser(this.getCurrentUser());
+        this.getCurrentUser().getUserWines().put(wineToAdd.getUid(), wineToAdd.getName());
+        saveCurrentUser();
+        this.saveWine(wineToAdd);
     }
 
     /**
@@ -126,20 +123,12 @@ public class Model {
         this.saveWine(new Wine(wineToAdd));
     }
 
-    /**
-     * Adds wine to user's list
-     * @param wineToAdd
-     */
-    public void addWineToUser(Wine wineToAdd)
-    {
-        this.getCurrentUser().getUserWines().put(wineToAdd.getUid(), wineToAdd.getName());
-        this.saveCurrentUser(this.getCurrentUser());
-    }
-
 
     public void removeWine(WineApiClass toRemove){
         this.getCurrentUser().getUserWines().remove(toRemove.getId());
-        this.saveCurrentUser(this.getCurrentUser());
+        // Saving to local and remote
+        WineSQL.getInstance().delete(this.modelLocalSql.getWritableDB(),toRemove.getId());
+        this.saveCurrentUser();
     }
 
     public void saveImage(Bitmap image, String url, WinezStorage.OnSaveCompleteListener onSaveCompleteListener) {
