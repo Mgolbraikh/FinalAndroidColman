@@ -1,21 +1,13 @@
 package com.example.owner.winez.Utils;
 
-import android.app.DownloadManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.util.Log;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.owner.winez.MyApplication;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class Utils {
 
@@ -29,13 +21,6 @@ public class Utils {
         }
         return _instance;
     }
-
-//    private boolean isNetworkAvailable() {
-//        ConnectivityManager connectivityManager
-//                = (ConnectivityManager) this.queue.ger.getSystemService(context.CONNECTIVITY_SERVICE);
-//        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-//        return activeNetworkInfo != null;
-//    }
 
     public void hasActiveInternetConnection(final CheckConnectivity connectivityLisenner) {
         String url = "http://clients3.google.com/generate_204";

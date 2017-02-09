@@ -9,9 +9,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 
@@ -59,28 +57,7 @@ public class WinezDB {
         });
     }
 
-    public <C extends Entity> void getAll(final String entityName, final Class<C> tClass, final GetOnCompleteResult<List<C>> getOnCompleteResult){
-        getCollection(entityName).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                getOnCompleteResult.onResult(getChildren(tClass,dataSnapshot));
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                getOnCompleteResult.onCancel(databaseError.getMessage());
-            }
-        });
-    }
-
-    private <C extends Entity> List<C> getChildren(Class<C> tClass ,DataSnapshot dataSnapshot) {
-        List<C> toReturn = new ArrayList<C>();
-        for (DataSnapshot snap : dataSnapshot.getChildren()){
-            toReturn.add(snap.getValue(tClass));
-        }
-        return toReturn;
-    }
     private DatabaseReference getChild(String entityName, String id) {
         return this.getCollection(entityName).child(id);
     }
