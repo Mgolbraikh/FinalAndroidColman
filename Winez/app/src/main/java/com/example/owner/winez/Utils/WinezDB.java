@@ -4,8 +4,10 @@ package com.example.owner.winez.Utils;
 import android.support.annotation.NonNull;
 
 
+import com.example.owner.winez.Model.Comment;
 import com.example.owner.winez.Model.Entity;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -135,9 +137,53 @@ public class WinezDB {
         toSave.setUid(key);
         return ref.setValue(toSave.toMap());
     }
+
+    public <C extends Entity> void getUpdatesForChildren(String entityName, final Class<C> classC, String id, final OnChildEventListener<C> onChildEventListener) {
+        this.getChild(entityName,id).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                onChildEventListener.onChildAdded(dataSnapshot.getValue(classC), s);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                onChildEventListener.onChildChanged(dataSnapshot.getValue(classC),s);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                onChildEventListener.onChildRemoved(dataSnapshot.getValue(classC));
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                onChildEventListener.onChildMoved(dataSnapshot.getValue(classC),s);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                onChildEventListener.onCancelled(databaseError.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Generic complete listener
+     * @param <T>
+     */
     public interface GetOnCompleteResult<T>{
         void onResult(T data);
         void onCancel(String err);
+    }
+
+    public interface OnChildEventListener<T>{
+        void onChildAdded(T child, String previousChildName);
+        void onChildChanged(T child, String previousChildName);
+        void onChildRemoved(T child);
+        void onChildMoved(T child,String previousChildName);
+        void onCancelled(String err);
+
     }
 
 }

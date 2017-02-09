@@ -86,4 +86,8 @@ public class WineSQL extends EntitySQL<Wine> {
             this.addEntity(db, new Wine(wine.getKey(), wine.getValue()));
         }
     }
+
+    public void delete(SQLiteDatabase writableDB, String id) {
+        writableDB.delete(this.getTable(),this.getTableID() + " = " + id,null);
+    }
 }
