@@ -51,10 +51,6 @@ public class WineFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // // TODO: 04-Feb-17 need to add the comment to wines and save and load from db
-    // TODO: Add back to home button (not backpress but the back on top)
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
