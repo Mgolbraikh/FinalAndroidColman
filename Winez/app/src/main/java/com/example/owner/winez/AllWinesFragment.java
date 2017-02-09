@@ -45,7 +45,7 @@ public class AllWinesFragment extends Fragment {
         final ListView list = (ListView)view.findViewById(R.id.all_wines_list);
         mAdapter = new AllWinesAdapter();
         allWines = new ArrayList<>();
-        WineApi.getInstance().GetWinesByCategory(new WineApi.GetResultOnRespons<WineApiClass>() {
+        WineApi.getInstance().GetWinesByCategory(new WineApi.GetResultOnResponse<WineApiClass>() {
             @Override
             public void onResult(ArrayList<WineApiClass> data) {
                 allWines = data;

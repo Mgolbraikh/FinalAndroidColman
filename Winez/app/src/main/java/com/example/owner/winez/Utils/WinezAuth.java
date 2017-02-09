@@ -2,21 +2,13 @@ package com.example.owner.winez.Utils;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.example.owner.winez.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.concurrent.Executor;
 
 /**
  * Created by Ziv on 29/01/2017.
@@ -30,7 +22,6 @@ public class WinezAuth {
 
     private WinezAuth() {
         this.mAuth = FirebaseAuth.getInstance();
-        FirebaseUser fireUser = this.mAuth.getCurrentUser();
 
         // Listening for auth changes
         this.mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {

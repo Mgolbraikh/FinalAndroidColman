@@ -1,6 +1,5 @@
 package com.example.owner.winez;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.NonNull;
@@ -12,7 +11,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.owner.winez.Model.Model;
