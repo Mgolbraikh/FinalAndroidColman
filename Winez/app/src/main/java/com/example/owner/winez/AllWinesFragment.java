@@ -75,7 +75,7 @@ public class AllWinesFragment extends Fragment {
                 Fragment wineDetailFrag = new WineFragment();
                 FragmentTransaction ftr  = getActivity().getFragmentManager().beginTransaction();
                 Bundle WineToShow = new Bundle();
-                WineToShow.putString(Consts.WINE_BUNDLE_ID, (String) currentWine.getId());
+                WineToShow.putString(Consts.WINE_BUNDLE_ID,currentWine.getId());
 
                 wineDetailFrag.setArguments(WineToShow);
                 ftr.replace(R.id.WinezActivityMainView, wineDetailFrag);

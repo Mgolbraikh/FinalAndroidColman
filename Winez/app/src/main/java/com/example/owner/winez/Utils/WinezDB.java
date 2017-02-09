@@ -113,7 +113,7 @@ public class WinezDB {
 
     public Task<Void> saveWithId(String entityName, Entity toSave){
         toSave.setSaveTimeStamp(new Date().getTime());
-        return this.mDatabase.getReference(entityName).child(toSave.getUid()).setValue(toSave.toMap());
+        return this.mDatabase.getReference(entityName).child(toSave.getUid()).updateChildren(toSave.toMap());
     }
 
 
