@@ -1,13 +1,16 @@
 package com.example.owner.winez.Utils;
 
+import android.app.DownloadManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.owner.winez.MyApplication;
 
@@ -35,32 +38,25 @@ public class Utils {
 //    }
 
     public void hasActiveInternetConnection(final CheckConnectivity connectivityLisenner) {
-        String url = "http://clients3.google.com/generate_200";
+        String url = "http://clients3.google.com/generate_204";
 
-        // Request a string response from the provided URL.
-        //StringRequest stringRequest = new StringRequest(
-        JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        StringRequest str = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    if(response.getInt("status") == 0);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            public void onResponse(String response) {
                 connectivityLisenner.onResult(true);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                connectivityLisenner.onResult(false);
             }
         });
 
-        this.queue.add(jor);
+        this.queue.add(str);
     }
 
     public interface CheckConnectivity{
-        Boolean onResult(boolean result);
+        void onResult(boolean result);
     }
 }
 

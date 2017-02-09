@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
-<!-- TODO: try to fucking right align this -->
     <CheckBox
         android:id="@+id/all_wine_favorite"
         android:layout_width="36dp"
