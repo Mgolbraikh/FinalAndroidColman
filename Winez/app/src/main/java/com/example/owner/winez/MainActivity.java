@@ -2,13 +2,11 @@ package com.example.owner.winez;
 
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.Display;
 import android.view.MenuItem;
 
 import com.example.owner.winez.Model.Model;
@@ -103,6 +101,7 @@ public class MainActivity extends Activity {
         }
     }
 
+    // TODO : Local DB to do
     @Override
     public void onResume(){
         super.onResume();

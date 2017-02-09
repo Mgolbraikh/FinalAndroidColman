@@ -82,7 +82,7 @@ public class Wine extends Entity {
         map.put("type",getType());
         map.put("name",getName());
         map.put("vintage",getVintage());
-        
+
         // Skipping picture if null
         if (getPicture() != null) {
             map.put("picture", getPicture());
