@@ -93,14 +93,17 @@ public class Model {
     }
     public User getCurrentUserLocal() {
 
-        User toReturn =  UserSQL.getInstance().getUser(this.modelLocalSql.getReadbleDB(),this.getCurrentUser().getUid());
-        List<Wine> wines = WineSQL.getInstance().getAllEntities(this.modelLocalSql.getReadbleDB());
+        User toReturn = UserSQL.getInstance().getUser(this.modelLocalSql.getReadbleDB(), WinezAuth.getInstance().getUserUid());
+        if (toReturn != null) {
+            List<Wine> wines = WineSQL.getInstance().getAllEntities(this.modelLocalSql.getReadbleDB());
 
-        for (Wine wine : wines ){
-            toReturn.getUserWines().put(wine.getUid(),wine.getName());
+            for (Wine wine : wines) {
+                toReturn.getUserWines().put(wine.getUid(), wine.getName());
+            }
+
+            WinezAuth.getInstance().setUserFromLocal(toReturn);
         }
-
-        return  toReturn;
+        return toReturn;
     }
 
     /**
@@ -112,6 +115,7 @@ public class Model {
         this.getCurrentUser().getUserWines().put(wineToAdd.getUid(), wineToAdd.getName());
         saveCurrentUser();
         this.saveWine(wineToAdd);
+        WineSQL.getInstance().addEntity(modelLocalSql.getWritableDB(),wineToAdd);
     }
 
     /**
@@ -145,5 +149,9 @@ public class Model {
 
     public void getImage(String picture, WinezStorage.OnGetBitmapListener onGetBitmapListener) {
         WinezStorage.getInstance().getImage(picture,onGetBitmapListener);
+    }
+
+    public Wine getWineFromLocal(String id){
+        return WineSQL.getInstance().getWine(this.modelLocalSql.getReadbleDB(), id);
     }
 }

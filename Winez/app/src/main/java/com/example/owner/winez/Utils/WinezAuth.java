@@ -96,6 +96,9 @@ public class WinezAuth {
         });
     }
 
+    public String getUserUid(){
+        return this.mAuth.getCurrentUser().getUid();
+    }
 
     public Task<AuthResult> authenticate(String email, String password) {
         return this.mAuth.signInWithEmailAndPassword(email,password);
@@ -112,6 +115,10 @@ public class WinezAuth {
         if (this.onAuthChangeListener!= null){
             this.onAuthChangeListener.onLogout();
         }
+    }
+
+    public void setUserFromLocal(User toReturn) {
+        this.currentUser = toReturn;
     }
 
     public interface OnAuthChangeListener{

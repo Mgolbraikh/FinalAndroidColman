@@ -11,13 +11,12 @@ import android.view.MenuItem;
 
 import com.example.owner.winez.Model.Model;
 import com.example.owner.winez.Model.User;
+import com.example.owner.winez.Utils.Utils;
 import com.example.owner.winez.Utils.WinezAuth;
 
 
 public class MainActivity extends Activity {
     private static final int REQUEST_WRITE_STORAGE = 112;
-
-    // TODO : check if there is internet connection via google client - if there isnt check local db for user/.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +36,20 @@ public class MainActivity extends Activity {
             showRegistration();
         } else if (Model.getInstance().getCurrentUser() != null) {
             buildTabs();
+        } else {
+            Utils.getInstance().hasActiveInternetConnection(new Utils.CheckConnectivity() {
+                @Override
+                public void onResult(boolean result) {
+                    if (!result) {
+                        User usr = Model.getInstance().getCurrentUserLocal();
+                        if (usr != null) {
+                            buildTabs();
+                        }
+                    }
+                }
+            });
         }
+
 
         // Setting event for after authentication is complete
         Model.getInstance().setOnAuthChangeListener(new WinezAuth.OnAuthChangeListener() {
@@ -66,16 +78,19 @@ public class MainActivity extends Activity {
 
     private void buildTabs() {
         FragmentManager fm = getFragmentManager();
+
+        // Checking if there is a need to create tabs
+        if (!(fm.findFragmentById(R.id.WinezActivityMainView) instanceof  TabControlFragment)) {
             TabControlFragment tabs = new TabControlFragment();
             fm.beginTransaction().add(R.id.WinezActivityMainView, tabs)
                     .addToBackStack(null)
                     .commit();
+        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-            case android.R.id.home:{
+        switch (item.getItemId()) {
+            case android.R.id.home: {
                 onBackPressed();
                 break;
             }
@@ -88,27 +103,14 @@ public class MainActivity extends Activity {
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0 &&
                 (fm.findFragmentById(R.id.WinezActivityMainView) instanceof RegisterFrag ||
-                 fm.findFragmentById(R.id.WinezActivityMainView) instanceof TabControlFragment)) {
+                        fm.findFragmentById(R.id.WinezActivityMainView) instanceof TabControlFragment)) {
             getFragmentManager().popBackStack();
             this.finish();
         } else if (fm.getBackStackEntryCount() > 0) {
-                Log.i("MainActivity", "popping backstack");
-                fm.popBackStack();
-        }else{
-            Log.i("MainActivity", "nothing on backstack, calling super");
-
+            fm.popBackStack();
+        } else {
             super.onBackPressed();
         }
     }
-
-    // TODO : Local DB to do
-    @Override
-    public void onResume(){
-        super.onResume();
-        Log.d("Main","resume");
-
-    }
-
-
 
 }
