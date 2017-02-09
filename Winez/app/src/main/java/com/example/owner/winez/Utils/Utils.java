@@ -2,55 +2,61 @@ package com.example.owner.winez.Utils;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.owner.winez.MyApplication;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-/**
- * Created by owner on 09-Feb-17.
- */
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Utils {
 
     private static Utils _instance;
+    private RequestQueue queue;
+    private Utils(){ this.queue = Volley.newRequestQueue(MyApplication.getAppContext()); }
 
-    private Utils(){}
-
-    Utils getInstance() {
+    public static Utils getInstance() {
         if(_instance == null){
             _instance = new Utils();
         }
         return _instance;
     }
 
-    private boolean isNetworkAvailable(MyApplication context) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null;
-    }
+//    private boolean isNetworkAvailable() {
+//        ConnectivityManager connectivityManager
+//                = (ConnectivityManager) this.queue.ger.getSystemService(context.CONNECTIVITY_SERVICE);
+//        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+//        return activeNetworkInfo != null;
+//    }
 
-    public void hasActiveInternetConnection(MyApplication context,final CheckConnectivity connectivityLisenner) {
-        if (isNetworkAvailable(context)) {
-            try {
-                HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
-                urlc.setRequestProperty("User-Agent", "Test");
-                urlc.setRequestProperty("Connection", "close");
-                urlc.setConnectTimeout(1500);
-                urlc.connect();
-                connectivityLisenner.onResult(urlc.getResponseCode() == 200);
-            } catch (IOException e) {
-                Log.e("Check", "Error checking internet connection", e);
+    public void hasActiveInternetConnection(final CheckConnectivity connectivityLisenner) {
+        String url = "http://clients3.google.com/generate_200";
+
+        // Request a string response from the provided URL.
+        //StringRequest stringRequest = new StringRequest(
+        JsonObjectRequest jor = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if(response.getInt("status") == 0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                connectivityLisenner.onResult(true);
             }
-        } else {
-            Log.d("Check", "No network available!");
-        }
-        connectivityLisenner.onResult(false);
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        this.queue.add(jor);
     }
 
     public interface CheckConnectivity{
