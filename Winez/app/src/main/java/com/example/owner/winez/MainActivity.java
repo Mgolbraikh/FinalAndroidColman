@@ -55,9 +55,10 @@ public class MainActivity extends Activity {
         Model.getInstance().setOnAuthChangeListener(new WinezAuth.OnAuthChangeListener() {
             @Override
             public void onLogin(User usr) {
+                buildTabs();
+                
                 //Save remote user to local db
                 Model.getInstance().saveCurrentUserLocal(usr);
-                buildTabs();
             }
 
             @Override
