@@ -2,7 +2,6 @@ package com.example.owner.winez;
 
 
 import android.app.FragmentTransaction;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -19,11 +18,7 @@ import com.example.owner.winez.Model.Model;
 import com.example.owner.winez.Model.User;
 import com.example.owner.winez.Utils.Consts;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
@@ -35,8 +30,6 @@ public class MyWinesListFragment extends Fragment {
     public MyWinesListFragment() {
         // Required empty public constructor
     }
-
-    // TODO : Local DB to do
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

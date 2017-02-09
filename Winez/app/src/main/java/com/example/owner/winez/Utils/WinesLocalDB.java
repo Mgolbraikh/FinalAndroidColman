@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.owner.winez.MainActivity;
 import com.example.owner.winez.MyApplication;
 import com.example.owner.winez.Utils.ModelSQL.UserSQL;
 import com.example.owner.winez.Utils.ModelSQL.WineSQL;

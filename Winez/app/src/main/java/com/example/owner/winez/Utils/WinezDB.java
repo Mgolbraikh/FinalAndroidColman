@@ -1,10 +1,5 @@
 package com.example.owner.winez.Utils;
 
-
-import android.support.annotation.NonNull;
-
-
-import com.example.owner.winez.Model.Comment;
 import com.example.owner.winez.Model.Entity;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
@@ -13,13 +8,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 
@@ -82,24 +74,6 @@ public class WinezDB {
         });
     }
 
-    public <C extends Entity> void getAllChildren(final String entityName,
-                                                  final Class<C> tClass,
-                                                  String parentID,
-                                                  final GetOnCompleteResult<List<C>> getOnCompleteResult){
-        getChild(entityName,parentID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                List<C> toReturn = getChildren(tClass, dataSnapshot);
-                getOnCompleteResult.onResult(toReturn);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                getOnCompleteResult.onCancel(databaseError.getMessage());
-            }
-        });
-    }
-
     private <C extends Entity> List<C> getChildren(Class<C> tClass ,DataSnapshot dataSnapshot) {
         List<C> toReturn = new ArrayList<C>();
         for (DataSnapshot snap : dataSnapshot.getChildren()){
@@ -113,21 +87,9 @@ public class WinezDB {
 
     public Task<Void> saveWithId(String entityName, Entity toSave){
         toSave.setSaveTimeStamp(new Date().getTime());
-        return this.mDatabase.getReference(entityName).child(toSave.getUid()).setValue(toSave.toMap());
-    }
 
-
-    public Task<Void> saveWithoutId(String entityName, Entity toSave) {
-        toSave.setSaveTimeStamp(new Date().getTime());
-        DatabaseReference ref = this.mDatabase.getReference(entityName).push();
-        String key = ref.getKey();
-        toSave.setUid(key);
-        return ref.setValue(key,toSave.toMap());
-    }
-
-    public void saveChild(String entityName, String parentId, Entity toSave){
-        toSave.setSaveTimeStamp(new Date().getTime());
-        this.getCollection(entityName).child(parentId).child(toSave.getUid()).setValue(toSave.toMap());
+        // Using update so it won't destroy existing data
+        return this.mDatabase.getReference(entityName).child(toSave.getUid()).updateChildren(toSave.toMap());
     }
 
     public Task<Void> saveChildWithoutId(String entityName, String parentId, Entity toSave){

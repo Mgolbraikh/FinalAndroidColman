@@ -45,7 +45,7 @@ public class AllWinesFragment extends Fragment {
         final ListView list = (ListView)view.findViewById(R.id.all_wines_list);
         mAdapter = new AllWinesAdapter();
         allWines = new ArrayList<>();
-        WineApi.getInstance().GetWinesByCategory(new WineApi.GetResultOnRespons<WineApiClass>() {
+        WineApi.getInstance().GetWinesByCategory(new WineApi.GetResultOnResponse<WineApiClass>() {
             @Override
             public void onResult(ArrayList<WineApiClass> data) {
                 allWines = data;
@@ -75,7 +75,7 @@ public class AllWinesFragment extends Fragment {
                 Fragment wineDetailFrag = new WineFragment();
                 FragmentTransaction ftr  = getActivity().getFragmentManager().beginTransaction();
                 Bundle WineToShow = new Bundle();
-                WineToShow.putString(Consts.WINE_BUNDLE_ID, (String) currentWine.getId());
+                WineToShow.putString(Consts.WINE_BUNDLE_ID,currentWine.getId());
 
                 wineDetailFrag.setArguments(WineToShow);
                 ftr.replace(R.id.WinezActivityMainView, wineDetailFrag);
