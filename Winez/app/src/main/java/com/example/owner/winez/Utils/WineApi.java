@@ -15,7 +15,6 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URL;
 import java.util.ArrayList;
 
 public class WineApi {
@@ -83,8 +82,8 @@ public class WineApi {
     }
 
     public interface GetResultOnResponse<T> {
-        public void onResult(ArrayList<T> data);
+        void onResult(ArrayList<T> data);
 
-        public void onCancel();
+        void onCancel();
     }
 }
