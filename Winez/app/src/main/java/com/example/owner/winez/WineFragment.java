@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,7 +45,6 @@ public class WineFragment extends Fragment {
     List<Comment> comments;
     CommentsAdapter mAdapter;
     ImageView wineImage;
-    boolean isEmptyList;
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     public WineFragment() {
@@ -62,13 +62,22 @@ public class WineFragment extends Fragment {
         Bundle WineIdBundle = getArguments();
         setHasOptionsMenu(true);
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_wine, container, false);
         final ListView commentsList = (ListView) view.findViewById(R.id.wine_comment_list);
         mAdapter = new CommentsAdapter();
         comments = new ArrayList<>();
         commentsList.setAdapter(mAdapter);
-        isEmptyList = true;
+
+        // Getting wine from local
+        wine = Model.getInstance().getWineFromLocal(WineIdBundle.getString(Consts.WINE_BUNDLE_ID));
+
+        if(wine != null){
+            this.fillWineData(view);
+        }
+
+        // Getting wine from remote
         Model.getInstance().getWine(WineIdBundle.getString(Consts.WINE_BUNDLE_ID), new WinezDB.GetOnCompleteResult<Wine>() {
             @Override
             public void onResult(Wine data) {
@@ -102,17 +111,7 @@ public class WineFragment extends Fragment {
 
                     }
                 });
-
-
-                TextView tvTitle = (TextView) view.findViewById(R.id.wine_wine_title);
-                tvTitle.setText(wine.getName());
-                EditText edPrice = (EditText) view.findViewById(R.id.wine_price);
-                edPrice.setText(Double.toString(wine.getPrice()));
-                EditText edType = (EditText) view.findViewById(R.id.wine_type);
-                edType.setText(wine.getType());
-                EditText edYear = (EditText) view.findViewById(R.id.wine_vintage_year);
-                edYear.setText(wine.getVintage());
-                CheckBox star = ((CheckBox) view.findViewById(R.id.wine_is_favorite));
+                fillWineData(view);
                 wineImage = (ImageView) view.findViewById(R.id.wine_image);
 
                 // Gets wine image if there is one
@@ -129,13 +128,7 @@ public class WineFragment extends Fragment {
                         }
                     });
                 }
-
-                // Checking checkbox if needed
-                star.setChecked(Model.getInstance()
-                        .getCurrentUser()
-                        .getUserWines()
-                        .containsKey(data.getUid()));
-
+                CheckBox star = ((CheckBox) view.findViewById(R.id.wine_is_favorite));
                 star.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -154,7 +147,7 @@ public class WineFragment extends Fragment {
 
             @Override
             public void onCancel(String err) {
-
+                Log.d("wine", err);
             }
         });
 
@@ -181,6 +174,24 @@ public class WineFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void fillWineData(View view) {
+        TextView tvTitle = (TextView) view.findViewById(R.id.wine_wine_title);
+        tvTitle.setText(wine.getName());
+        EditText edPrice = (EditText) view.findViewById(R.id.wine_price);
+        edPrice.setText(Double.toString(wine.getPrice()));
+        EditText edType = (EditText) view.findViewById(R.id.wine_type);
+        edType.setText(wine.getType());
+        EditText edYear = (EditText) view.findViewById(R.id.wine_vintage_year);
+        edYear.setText(wine.getVintage());
+        CheckBox star = ((CheckBox) view.findViewById(R.id.wine_is_favorite));
+
+        // Checking checkbox if needed
+        star.setChecked(Model.getInstance()
+                .getCurrentUser()
+                .getUserWines()
+                .containsKey(wine.getUid()));
     }
 
     @Override
